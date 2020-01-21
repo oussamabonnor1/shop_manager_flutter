@@ -1,3 +1,6 @@
+import 'dart:math';
+
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -22,6 +25,16 @@ class _HomePageState extends State<HomePage> {
   static Color darkTextColor = Color(0xFF565656);
   static Color lightTextColor = Color(0xFFFEFEFE);
   static Color lightTransparentTextColor = Color(0xFFDCDCDC);
+
+  int totalAmount, todayAmount;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    totalAmount = 1270;
+    todayAmount = 0;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -52,7 +65,7 @@ class _HomePageState extends State<HomePage> {
                             fontStyle: FontStyle.italic,
                             color: lightTransparentTextColor)),
                     Text(
-                      "0.00 Da",
+                      "$totalAmount Da",
                       style: TextStyle(
                           fontSize: 20, color: lightTransparentTextColor),
                     ),
@@ -65,7 +78,7 @@ class _HomePageState extends State<HomePage> {
                             fontWeight: FontWeight.bold,
                             color: lightTextColor)),
                     Text(
-                      "0.00 Da",
+                      "$todayAmount Da",
                       style: TextStyle(
                           fontSize: 26,
                           fontWeight: FontWeight.bold,
@@ -89,7 +102,13 @@ class _HomePageState extends State<HomePage> {
                           style:
                               TextStyle(color: lightTextColor, fontSize: 18)),
                     ),
-                    onPressed: () {}),
+                    onPressed: () {
+                      setState(() {
+                        sellingDialog(context).then((onValue) {
+                          sellingAction(onValue);
+                        });
+                      });
+                    }),
                 MaterialButton(
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(50)),
@@ -103,9 +122,7 @@ class _HomePageState extends State<HomePage> {
                     onPressed: () {})
               ],
             ),
-            SizedBox(
-              height: 10,
-            ),
+            SizedBox(height: 10),
             Expanded(
                 child: ListView.separated(
                     separatorBuilder: (context, index) =>
@@ -113,8 +130,12 @@ class _HomePageState extends State<HomePage> {
                     itemCount: 5,
                     padding: EdgeInsets.fromLTRB(8, 0, 8, 0),
                     itemBuilder: (context, index) {
-                      return salesInfoCard(index % 2 == 0, index,
-                          "Explication & infos & application", 16.3, 20);
+                      return salesInfoCard(
+                          index % 2 == 0,
+                          index,
+                          "Explication & infos & application",
+                          16.3,
+                          index * pow(10, index + 1));
                     }))
           ],
         ),
@@ -123,7 +144,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget salesInfoCard(
-      bool type, int index, String title, double weight, double price) {
+      bool type, int index, String title, double weight, int price) {
     return Card(
       color: lightTextColor,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
@@ -180,5 +201,35 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
     );
+  }
+
+  int sellingAction(int amount) {
+    todayAmount += amount;
+    totalAmount += amount;
+  }
+
+  Future<int> sellingDialog(BuildContext context) {
+    TextEditingController infoController = TextEditingController();
+    return showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text("Remplissez vos infos"),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[TextField(controller: infoController)],
+            ),
+            actions: <Widget>[
+              FlatButton(
+                  onPressed: () {
+                    setState(() {
+                      Navigator.of(context)
+                          .pop(int.parse(infoController.text.toString()));
+                    });
+                  },
+                  child: Text("Ajouter")),
+            ],
+          );
+        });
   }
 }
