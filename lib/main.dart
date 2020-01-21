@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:shop_manager/Models/SalesInfo.dart';
 
 void main() {
   runApp(MaterialApp(
@@ -27,6 +28,7 @@ class _HomePageState extends State<HomePage> {
   static Color lightTransparentTextColor = Color(0xFFDCDCDC);
 
   int totalAmount, todayAmount;
+  List<SalesInfo> salesInfoList = List();
 
   @override
   void initState() {
@@ -34,6 +36,8 @@ class _HomePageState extends State<HomePage> {
     super.initState();
     totalAmount = 1270;
     todayAmount = 0;
+    salesInfoList.add(SalesInfo(information: "Sold", amount: 100, type: true));
+    salesInfoList.add(SalesInfo(information: "Bought", amount: 150, type: false));
   }
 
   @override
@@ -127,15 +131,10 @@ class _HomePageState extends State<HomePage> {
                 child: ListView.separated(
                     separatorBuilder: (context, index) =>
                         Divider(height: 3, color: Colors.transparent),
-                    itemCount: 5,
+                    itemCount: salesInfoList.length,
                     padding: EdgeInsets.fromLTRB(8, 0, 8, 0),
                     itemBuilder: (context, index) {
-                      return salesInfoCard(
-                          index % 2 == 0,
-                          index,
-                          "Explication & infos & application",
-                          16.3,
-                          index * pow(10, index + 1));
+                      return salesInfoCard(index, salesInfoList[index]);
                     }))
           ],
         ),
@@ -143,8 +142,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget salesInfoCard(
-      bool type, int index, String title, double weight, int price) {
+  Widget salesInfoCard(int index, SalesInfo info) {
     return Card(
       color: lightTextColor,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
@@ -154,9 +152,9 @@ class _HomePageState extends State<HomePage> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
             CircleAvatar(
-                backgroundColor: type ? lightAccentColor : darkUiColor,
+                backgroundColor: info.type ? lightAccentColor : darkUiColor,
                 child: Icon(
-                  type ? Icons.add : Icons.remove,
+                  info.type ? Icons.add : Icons.remove,
                   color: lightTextColor,
                 )),
             Expanded(
@@ -165,20 +163,12 @@ class _HomePageState extends State<HomePage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    Text(title,
+                    Text(info.information,
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
                             color: darkTextColor)),
-                    SizedBox(
-                      height: 5,
-                    ),
-                    Text("$weight g",
-                        style: TextStyle(
-                            fontSize: 16,
-                            fontStyle: FontStyle.italic,
-                            color: Color(0xFFA0A0A0))),
                   ],
                 ),
               ),
@@ -186,7 +176,7 @@ class _HomePageState extends State<HomePage> {
             Column(
               crossAxisAlignment: CrossAxisAlignment.end,
               children: <Widget>[
-                Text(price.toString() + " Da",
+                Text(info.amount.toString() + " Da",
                     style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
@@ -203,13 +193,14 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  int sellingAction(int amount) {
-    todayAmount += amount;
-    totalAmount += amount;
+  void sellingAction(SalesInfo info) {
+    todayAmount += info.amount;
+    totalAmount += info.amount;
   }
 
-  Future<int> sellingDialog(BuildContext context) {
+  Future<SalesInfo> sellingDialog(BuildContext context) {
     TextEditingController infoController = TextEditingController();
+    TextEditingController amountController = TextEditingController();
     return showDialog(
         context: context,
         builder: (context) {
@@ -217,14 +208,20 @@ class _HomePageState extends State<HomePage> {
             title: Text("Remplissez vos infos"),
             content: Column(
               mainAxisSize: MainAxisSize.min,
-              children: <Widget>[TextField(controller: infoController)],
+              children: <Widget>[
+                TextField(controller: infoController),
+                TextField(controller: amountController)
+              ],
             ),
             actions: <Widget>[
               FlatButton(
                   onPressed: () {
                     setState(() {
-                      Navigator.of(context)
-                          .pop(int.parse(infoController.text.toString()));
+                      SalesInfo infoTemp = SalesInfo(
+                          information: infoController.text.toString(),
+                          amount: int.parse(amountController.text.toString()),
+                          type: true);
+                      Navigator.of(context).pop(infoTemp);
                     });
                   },
                   child: Text("Ajouter")),
