@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:shop_manager/Models/SalesInfo.dart';
 
 void main() {
@@ -60,34 +61,45 @@ class _HomePageState extends State<HomePage> {
               color: darkAccentColor,
               child: Padding(
                 padding: const EdgeInsets.all(16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
-                    Text("Contenu de caisse",
-                        style: TextStyle(
-                            fontSize: 14,
-                            fontStyle: FontStyle.italic,
-                            color: lightTransparentTextColor)),
-                    Text(
-                      "$totalAmount Da",
-                      style: TextStyle(
-                          fontSize: 20, color: lightTransparentTextColor),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Text("Contenu de caisse",
+                            style: TextStyle(
+                                fontSize: 14,
+                                fontStyle: FontStyle.italic,
+                                color: lightTransparentTextColor)),
+                        Text(
+                          "$totalAmount Da",
+                          style: TextStyle(
+                              fontSize: 20, color: lightTransparentTextColor),
+                        ),
+                        SizedBox(
+                          height: 15,
+                        ),
+                        Text("Gain du jour:",
+                            style: TextStyle(
+                                fontSize: 17,
+                                fontWeight: FontWeight.bold,
+                                color: lightTextColor)),
+                        Text(
+                          "$todayAmount Da",
+                          style: TextStyle(
+                              fontSize: 26,
+                              fontWeight: FontWeight.bold,
+                              color: lightTextColor),
+                        ),
+                      ],
                     ),
-                    SizedBox(
-                      height: 15,
-                    ),
-                    Text("Gain du jour:",
-                        style: TextStyle(
-                            fontSize: 17,
-                            fontWeight: FontWeight.bold,
-                            color: lightTextColor)),
-                    Text(
-                      "$todayAmount Da",
-                      style: TextStyle(
-                          fontSize: 26,
-                          fontWeight: FontWeight.bold,
-                          color: lightTextColor),
-                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Image.asset("images/logo.png", height: 120,)
+                      //SvgPicture.asset("images/cookie.svg",height: 120,),
+                    )
                   ],
                 ),
               ),
@@ -149,54 +161,54 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget salesInfoCard(int index, SalesInfo info) {
-    return Card(
-      color: lightTextColor,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-      child: Padding(
-        padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>[
-            CircleAvatar(
-                backgroundColor: info.type ? lightAccentColor : darkUiColor,
-                child: Icon(info.type ? Icons.add : Icons.remove,
-                    color: lightTextColor)),
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.only(left: 16, right: 16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Text(info.information,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                            color: darkTextColor)),
-                  ],
+    return GestureDetector(
+      onTap: (){
+        salesInfoPopUp(context, info);
+      },
+      child: Card(
+        color: lightTextColor,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              CircleAvatar(
+                  backgroundColor: info.type ? lightAccentColor : darkUiColor,
+                  child: Icon(info.type ? Icons.add : Icons.remove,
+                      color: lightTextColor)),
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 16, right: 16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Text(info.information,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: darkTextColor)),
+                    ],
+                  ),
                 ),
               ),
-            ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: <Widget>[
-                Text(info.amount.toString() + " Da",
-                    style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.grey[600])),
-                IconButton(
-                  icon: Icon(
-                    Icons.info_outline,
-                    color: Colors.grey[600],
-                  ),
-                  onPressed: () {
-                    salesInfoPopUp(context, info);
-                  },
-                )
-              ],
-            )
-          ],
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: <Widget>[
+                  Text(info.amount.toString() + " Da",
+                      style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.grey[600])),
+                  Icon(
+                      Icons.info_outline,
+                      color: Colors.grey[600],
+                    ),
+                ],
+              )
+            ],
+          ),
         ),
       ),
     );
@@ -265,9 +277,12 @@ class _HomePageState extends State<HomePage> {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: <Widget>[
-                    Image(
-                      image: AssetImage("images/saving.png"),
-                      width: 150,
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Image(
+                        image: AssetImage(info.type ? "images/saving.png" : "images/buying.png"),
+                        height: 100,
+                      ),
                     ),
                     Text(
                       info.amount.toString() + " Da",
