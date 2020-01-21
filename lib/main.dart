@@ -265,39 +265,34 @@ class _HomePageState extends State<HomePage> {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: <Widget>[
-                    Image(image: AssetImage("images/saving.png")),
-                    Row(
-                      children: <Widget>[
-                        Icon(
-                          Icons.info,
-                          color: Colors.grey[600],
-                        ),
-                        SizedBox(
-                          width: 15,
-                        ),
-                        Expanded(
-                            child: Text(
-                          info.information,
-                          style: TextStyle(fontSize: 20, color: darkTextColor),
-                        ))
-                      ],
+                    Image(
+                      image: AssetImage("images/saving.png"),
+                      width: 150,
+                    ),
+                    Text(
+                      info.amount.toString() + " Da",
+                      style: TextStyle(
+                          fontSize: 26,
+                          fontWeight: FontWeight.bold,
+                          color: darkTextColor),
                     ),
                     SizedBox(height: 10),
-                    Row(
-                      children: <Widget>[
-                        Icon(
-                          Icons.monetization_on,
-                          color: Colors.grey[600],
-                        ),
-                        SizedBox(
-                          width: 15,
-                        ),
-                        Expanded(
-                            child: Text(
-                              info.amount.toString(),
-                              style: TextStyle(fontSize: 20, color: darkTextColor),
-                            ))
-                      ],
+                    Padding(
+                      padding: const EdgeInsets.only(left: 24, right: 24),
+                      child: Text(
+                        info.information,
+                        style: TextStyle(fontSize: 20, color: darkTextColor),
+                      ),
+                    ),
+                    SizedBox(height: 10),
+                    FlatButton(
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      child:
+                          Text("Retour", style: TextStyle(color: Colors.white)),
+                      color: darkAccentColor,
                     )
                   ],
                 )
