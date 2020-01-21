@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:shop_manager/Models/SalesInfo.dart';
 
 void main() {
@@ -158,10 +159,8 @@ class _HomePageState extends State<HomePage> {
           children: <Widget>[
             CircleAvatar(
                 backgroundColor: info.type ? lightAccentColor : darkUiColor,
-                child: Icon(
-                  info.type ? Icons.add : Icons.remove,
-                  color: lightTextColor,
-                )),
+                child: Icon(info.type ? Icons.add : Icons.remove,
+                    color: lightTextColor)),
             Expanded(
               child: Padding(
                 padding: const EdgeInsets.only(left: 16, right: 16),
@@ -186,9 +185,14 @@ class _HomePageState extends State<HomePage> {
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
                         color: Colors.grey[600])),
-                Icon(
-                  Icons.info_outline,
-                  color: Colors.grey[600],
+                IconButton(
+                  icon: Icon(
+                    Icons.info_outline,
+                    color: Colors.grey[600],
+                  ),
+                  onPressed: () {
+                    salesInfoPopUp(context, info);
+                  },
                 )
               ],
             )
@@ -201,12 +205,12 @@ class _HomePageState extends State<HomePage> {
   void sellingAction(SalesInfo info) {
     todayAmount += info.amount;
     totalAmount += info.amount;
-    salesInfoList.add(info);
+    salesInfoList.insert(0, info);
   }
 
   void buyingAction(SalesInfo info) {
     totalAmount -= info.amount;
-    salesInfoList.add(info);
+    salesInfoList.insert(0, info);
   }
 
   Future<SalesInfo> sellingDialog(BuildContext context, bool type) {
@@ -249,4 +253,97 @@ class _HomePageState extends State<HomePage> {
         });
   }
 
+  salesInfoPopUp(BuildContext context, SalesInfo info) {
+    return showDialog(
+        context: context,
+        builder: (context) {
+          return Dialog(
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+            child: Padding(
+                padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    Image(image: AssetImage("images/saving.png")),
+                    Row(
+                      children: <Widget>[
+                        Icon(
+                          Icons.info,
+                          color: Colors.grey[600],
+                        ),
+                        SizedBox(
+                          width: 15,
+                        ),
+                        Expanded(
+                            child: Text(
+                          info.information,
+                          style: TextStyle(fontSize: 20, color: darkTextColor),
+                        ))
+                      ],
+                    ),
+                    SizedBox(height: 10),
+                    Row(
+                      children: <Widget>[
+                        Icon(
+                          Icons.monetization_on,
+                          color: Colors.grey[600],
+                        ),
+                        SizedBox(
+                          width: 15,
+                        ),
+                        Expanded(
+                            child: Text(
+                              info.amount.toString(),
+                              style: TextStyle(fontSize: 20, color: darkTextColor),
+                            ))
+                      ],
+                    )
+                  ],
+                )
+                /*Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            CircleAvatar(
+              backgroundColor: info.type ? lightAccentColor : darkUiColor,
+              child: Icon(
+                info.type ? Icons.add : Icons.remove,
+                color: lightTextColor,
+              )),
+            Expanded(
+            child: Padding(
+              padding: const EdgeInsets.only(left: 16, right: 16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Text(info.information,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: darkTextColor)),
+                ],
+              ),
+            ),
+            ),
+            Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: <Widget>[
+              Text(info.amount.toString() + " Da",
+                  style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.grey[600])),
+              Icon(
+                Icons.info_outline,
+                color: Colors.grey[600],
+              )
+            ],
+            )
+          ],
+        ),*/
+                ),
+          );
+        });
+  }
 }
