@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shop_manager/Models/SalesInfo.dart';
@@ -37,7 +35,8 @@ class _HomePageState extends State<HomePage> {
     totalAmount = 1270;
     todayAmount = 0;
     salesInfoList.add(SalesInfo(information: "Sold", amount: 100, type: true));
-    salesInfoList.add(SalesInfo(information: "Bought", amount: 150, type: false));
+    salesInfoList
+        .add(SalesInfo(information: "Bought", amount: 150, type: false));
   }
 
   @override
@@ -108,7 +107,7 @@ class _HomePageState extends State<HomePage> {
                     ),
                     onPressed: () {
                       setState(() {
-                        sellingDialog(context).then((onValue) {
+                        sellingDialog(context, true).then((onValue) {
                           sellingAction(onValue);
                         });
                       });
@@ -123,7 +122,13 @@ class _HomePageState extends State<HomePage> {
                           style:
                               TextStyle(color: lightTextColor, fontSize: 18)),
                     ),
-                    onPressed: () {})
+                    onPressed: () {
+                      setState(() {
+                        sellingDialog(context, false).then((onValue) {
+                          buyingAction(onValue);
+                        });
+                      });
+                    })
               ],
             ),
             SizedBox(height: 10),
@@ -196,9 +201,15 @@ class _HomePageState extends State<HomePage> {
   void sellingAction(SalesInfo info) {
     todayAmount += info.amount;
     totalAmount += info.amount;
+    salesInfoList.add(info);
   }
 
-  Future<SalesInfo> sellingDialog(BuildContext context) {
+  void buyingAction(SalesInfo info) {
+    totalAmount -= info.amount;
+    salesInfoList.add(info);
+  }
+
+  Future<SalesInfo> sellingDialog(BuildContext context, bool type) {
     TextEditingController infoController = TextEditingController();
     TextEditingController amountController = TextEditingController();
     return showDialog(
@@ -209,8 +220,16 @@ class _HomePageState extends State<HomePage> {
             content: Column(
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
-                TextField(controller: infoController),
-                TextField(controller: amountController)
+                TextField(
+                  controller: infoController,
+                  decoration: InputDecoration(hintText: "Titre de transaction"),
+                  keyboardType: TextInputType.text,
+                ),
+                TextField(
+                  controller: amountController,
+                  decoration: InputDecoration(hintText: "Montant"),
+                  keyboardType: TextInputType.number,
+                )
               ],
             ),
             actions: <Widget>[
@@ -220,7 +239,7 @@ class _HomePageState extends State<HomePage> {
                       SalesInfo infoTemp = SalesInfo(
                           information: infoController.text.toString(),
                           amount: int.parse(amountController.text.toString()),
-                          type: true);
+                          type: type);
                       Navigator.of(context).pop(infoTemp);
                     });
                   },
@@ -229,4 +248,5 @@ class _HomePageState extends State<HomePage> {
           );
         });
   }
+
 }
