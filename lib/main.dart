@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:shop_manager/Database/DatabaseManager.dart';
 import 'package:shop_manager/Models/SalesInfo.dart';
 
 void main() {
@@ -22,8 +23,7 @@ class _HomePageState extends State<HomePage> {
   static Color darkBackgroundColor = Color(0xFFf4f4f4);
   static Color darkAccentColor = Color(0xFF951556);
   static Color lightAccentColor = Color(0xFFE9B4D2);
-  static Color darkUiColor = Color(0xFF4a3943);
-  static Color darkTextColor = Color(0xFF565656);
+  static Color darkTextColor = Color(0xFF333333);
   static Color lightTextColor = Color(0xFFFEFEFE);
   static Color lightTransparentTextColor = Color(0xFFDCDCDC);
 
@@ -34,11 +34,14 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    totalAmount = 1270;
+    totalAmount = 0;
     todayAmount = 0;
     salesInfoList.add(SalesInfo(information: "Sold", amount: 100, type: true));
     salesInfoList
         .add(SalesInfo(information: "Bought", amount: 150, type: false));
+
+    DatabaseManager dbManager = new DatabaseManager();
+    dbManager.initDatabase();
   }
 
   @override
@@ -46,7 +49,7 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       appBar: AppBar(
         title: Text("Activité d'aujourdhui"),
-        backgroundColor: mainBackgroundColor,
+        backgroundColor: darkAccentColor,
       ),
       body: Container(
         color: darkBackgroundColor,
@@ -58,7 +61,7 @@ class _HomePageState extends State<HomePage> {
               elevation: 5,
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(15)),
-              color: darkAccentColor,
+              color: mainBackgroundColor,
               child: Padding(
                 padding: const EdgeInsets.all(16),
                 child: Row(
@@ -111,7 +114,7 @@ class _HomePageState extends State<HomePage> {
                 MaterialButton(
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(50)),
-                    color: lightAccentColor,
+                    color: darkAccentColor,
                     child: Padding(
                       padding: const EdgeInsets.fromLTRB(40, 10, 40, 10),
                       child: Text("Vente",
@@ -128,7 +131,7 @@ class _HomePageState extends State<HomePage> {
                 MaterialButton(
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(50)),
-                    color: darkUiColor,
+                    color: mainBackgroundColor,
                     child: Padding(
                       padding: const EdgeInsets.fromLTRB(40, 10, 40, 10),
                       child: Text("Achat",
@@ -174,7 +177,7 @@ class _HomePageState extends State<HomePage> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
               CircleAvatar(
-                  backgroundColor: info.type ? lightAccentColor : darkUiColor,
+                  backgroundColor: info.type ? darkAccentColor : mainBackgroundColor,
                   child: Icon(info.type ? Icons.add : Icons.remove,
                       color: lightTextColor)),
               Expanded(

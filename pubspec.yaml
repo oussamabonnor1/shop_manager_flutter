@@ -25,6 +25,7 @@ dependencies:
   cupertino_icons: ^0.1.2
   flutter_svg: ^0.16.1
   flutter_launcher_icons: ^0.7.4
+  sqflite: ^1.2.0
 
 dev_dependencies:
   flutter_test:
