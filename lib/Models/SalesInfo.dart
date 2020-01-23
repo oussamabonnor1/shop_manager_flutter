@@ -11,18 +11,16 @@ class SalesInfo{
   int amount;
   bool type;
 
-  SalesInfo({int id, this.information, this.amount, this.type});
+  SalesInfo({this.id, this.information, this.amount, this.type});
 
 
   Map<String, dynamic> toMap() {
     var map = <String, dynamic>{
+      idColumn : id,
       informationColumn : information,
       priceColumn : amount,
       typeColumn: type == true ? 1 : 0
     };
-    if (id != null) {
-      map[idColumn] = id;
-    }
     return map;
   }
 

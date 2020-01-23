@@ -42,6 +42,7 @@ class DatabaseManager {
   }
 
   Future<SalesInfo> insert(SalesInfo salesInfo) async {
+    print(salesInfo.toMap().values.toList());
     salesInfo.id = await db.insert(tableName, salesInfo.toMap());
     return salesInfo;
   }
