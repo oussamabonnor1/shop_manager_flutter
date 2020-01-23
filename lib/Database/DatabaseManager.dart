@@ -60,9 +60,9 @@ class DatabaseManager {
 
   Future<List<SalesInfo>> getAllSalesInfo(int id) async {
     List<Map> maps = await db.query(tableName);
-    maps.forEach((row) => print(row));
 
     if (maps.length > 0) {
+      maps = maps.reversed.toList();
       List<SalesInfo> salesInfoList = List();
       for (int i = 0; i < maps.length; i++) {
         salesInfoList.add(SalesInfo.fromMap(maps[i]));
