@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:shop_manager/Database/DatabaseManager.dart';
+import 'package:shop_manager/Database/SalesInfoDbManager.dart';
 import 'package:shop_manager/Models/SalesInfo.dart';
 
 void main() {
@@ -30,6 +31,7 @@ class _HomePageState extends State<HomePage> {
   int totalAmount, todayAmount;
   List<SalesInfo> salesInfoList = List();
   DatabaseManager dbManager;
+  SalesInfoDbManager salesInfoDbManager;
 
   @override
   void initState() {
@@ -40,12 +42,13 @@ class _HomePageState extends State<HomePage> {
 
     dbManager = new DatabaseManager();
     dbManager.initDatabase().then((onValue){
-      fillSalesList(dbManager);
+      salesInfoDbManager = new SalesInfoDbManager(dbManager.db);
+      fillSalesList(salesInfoDbManager);
     });
 
   }
 
-  void fillSalesList(DatabaseManager dbManager) async{
+  void fillSalesList(SalesInfoDbManager dbManager) async{
     salesInfoList = await dbManager.getAllSalesInfo(0);
     setState(() {
         if(salesInfoList == null) {
@@ -273,7 +276,7 @@ class _HomePageState extends State<HomePage> {
                           information: infoController.text.toString(),
                           amount: int.parse(amountController.text.toString()),
                           type: type);
-                      dbManager.insert(infoTemp);
+                      salesInfoDbManager.insert(infoTemp);
                       Navigator.of(context).pop(infoTemp);
                     });
                   },
