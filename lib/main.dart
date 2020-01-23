@@ -29,6 +29,7 @@ class _HomePageState extends State<HomePage> {
 
   int totalAmount, todayAmount;
   List<SalesInfo> salesInfoList = List();
+  DatabaseManager dbManager;
 
   @override
   void initState() {
@@ -36,12 +37,24 @@ class _HomePageState extends State<HomePage> {
     super.initState();
     totalAmount = 0;
     todayAmount = 0;
-    salesInfoList.add(SalesInfo(information: "Sold", amount: 100, type: true));
-    salesInfoList
-        .add(SalesInfo(information: "Bought", amount: 150, type: false));
 
-    DatabaseManager dbManager = new DatabaseManager();
-    dbManager.initDatabase();
+    dbManager = new DatabaseManager();
+    dbManager.initDatabase().then((onValue){
+      fillSalesList(dbManager);
+    });
+
+  }
+
+  void fillSalesList(DatabaseManager dbManager) async{
+    salesInfoList = await dbManager.getAllSalesInfo(0);
+    setState(() {
+        if(salesInfoList == null) {
+          salesInfoList = new List();
+          print("not success");
+        }else{
+          print("success");
+        }
+    });
   }
 
   @override
@@ -256,9 +269,11 @@ class _HomePageState extends State<HomePage> {
                   onPressed: () {
                     setState(() {
                       SalesInfo infoTemp = SalesInfo(
+                          id: 0,
                           information: infoController.text.toString(),
                           amount: int.parse(amountController.text.toString()),
                           type: type);
+                      dbManager.insert(infoTemp);
                       Navigator.of(context).pop(infoTemp);
                     });
                   },
