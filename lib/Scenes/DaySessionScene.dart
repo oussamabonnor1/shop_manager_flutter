@@ -9,7 +9,6 @@ class DaySessionScene extends StatefulWidget {
 }
 
 class _DaySessionSceneState extends State<DaySessionScene> {
-
   static Color mainBackgroundColor = Color(0xFF56104F);
   static Color darkBackgroundColor = Color(0xFFf4f4f4);
   static Color darkAccentColor = Color(0xFF951556);
@@ -109,8 +108,8 @@ class _DaySessionSceneState extends State<DaySessionScene> {
                           "images/inAppLogo.png",
                           height: 120,
                         )
-                      //SvgPicture.asset("images/cookie.svg",height: 120,),
-                    )
+                        //SvgPicture.asset("images/cookie.svg",height: 120,),
+                        )
                   ],
                 ),
               ),
@@ -127,12 +126,13 @@ class _DaySessionSceneState extends State<DaySessionScene> {
                       padding: const EdgeInsets.fromLTRB(40, 10, 40, 10),
                       child: Text("Vente",
                           style:
-                          TextStyle(color: lightTextColor, fontSize: 18)),
+                              TextStyle(color: lightTextColor, fontSize: 18)),
                     ),
                     onPressed: () {
                       setState(() {
-                        sellingDialog(context, true).then((onValue) {
-                          sellingAction(onValue);
+                        salesActionDialog(context, true).then((onValue) {
+                          if(onValue != null)
+                            sellingAction(onValue);
                         });
                       });
                     }),
@@ -144,11 +144,12 @@ class _DaySessionSceneState extends State<DaySessionScene> {
                       padding: const EdgeInsets.fromLTRB(40, 10, 40, 10),
                       child: Text("Achat",
                           style:
-                          TextStyle(color: lightTextColor, fontSize: 18)),
+                              TextStyle(color: lightTextColor, fontSize: 18)),
                     ),
                     onPressed: () {
                       setState(() {
-                        sellingDialog(context, false).then((onValue) {
+                        salesActionDialog(context, false).then((onValue) {
+                          if(onValue != null)
                           buyingAction(onValue);
                         });
                       });
@@ -174,7 +175,7 @@ class _DaySessionSceneState extends State<DaySessionScene> {
   Widget salesInfoCard(int index, SalesInfo info) {
     return GestureDetector(
       onTap: () {
-        salesInfoPopUp(context, info);
+        //salesActionDialog(context, info);
       },
       child: Card(
         color: lightTextColor,
@@ -186,7 +187,7 @@ class _DaySessionSceneState extends State<DaySessionScene> {
             children: <Widget>[
               CircleAvatar(
                   backgroundColor:
-                  info.type ? darkAccentColor : mainBackgroundColor,
+                      info.type ? darkAccentColor : mainBackgroundColor,
                   child: Icon(info.type ? Icons.add : Icons.remove,
                       color: lightTextColor)),
               Expanded(
@@ -237,49 +238,7 @@ class _DaySessionSceneState extends State<DaySessionScene> {
     salesInfoList.insert(0, info);
   }
 
-  Future<SalesInfo> sellingDialog(BuildContext context, bool type) {
-    TextEditingController infoController = TextEditingController();
-    TextEditingController amountController = TextEditingController();
-    return showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            title: Text("Remplissez vos infos"),
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                TextField(
-                  controller: infoController,
-                  decoration: InputDecoration(hintText: "Titre de transaction"),
-                  keyboardType: TextInputType.text,
-                ),
-                TextField(
-                  controller: amountController,
-                  decoration: InputDecoration(hintText: "Montant"),
-                  keyboardType: TextInputType.number,
-                )
-              ],
-            ),
-            actions: <Widget>[
-              FlatButton(
-                  onPressed: () {
-                    setState(() {
-                      SalesInfo infoTemp = SalesInfo(
-                          id: 0,
-                          information: infoController.text.toString(),
-                          amount: int.parse(amountController.text.toString()),
-                          type: type);
-                      salesInfoDbManager.insert(infoTemp);
-                      Navigator.of(context).pop(infoTemp);
-                    });
-                  },
-                  child: Text("Ajouter")),
-            ],
-          );
-        });
-  }
-
-  salesInfoPopUp(BuildContext context, SalesInfo info) {
+  Future<SalesInfo> salesActionDialog(BuildContext context, bool type) {
     TextEditingController infoController = TextEditingController();
     TextEditingController amountController = TextEditingController();
 
@@ -288,60 +247,74 @@ class _DaySessionSceneState extends State<DaySessionScene> {
         builder: (context) {
           return Dialog(
             shape:
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
             child: Padding(
                 padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: <Widget>[
+                    Image(
+                      image: AssetImage(
+                          type ? "images/saving.png" : "images/buying.png"),
+                      fit: BoxFit.fitWidth,
+                    ),
                     Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: Image(
-                        image: AssetImage(info.type
-                            ? "images/saving.png"
-                            : "images/buying.png"),
-                        height: 100,
-                      ),
+                      child: TextField(
+                          controller: infoController,
+                          decoration:
+                              InputDecoration(hintText: "Titre de transaction"),
+                          keyboardType: TextInputType.text),
                     ),
-                    TextField(
-                      controller: infoController,
-                      decoration: InputDecoration(hintText: "Titre de transaction"),
-                      keyboardType: TextInputType.text,
-                    ),
-                    TextField(
-                      controller: amountController,
-                      decoration: InputDecoration(hintText: "Montant"),
-                      keyboardType: TextInputType.number,
-                    ),
-                    Text(
-                      info.amount.toString() + " Da",
-                      style: TextStyle(
-                          fontSize: 26,
-                          fontWeight: FontWeight.bold,
-                          color: darkTextColor),
-                    ),
-                    SizedBox(height: 10),
                     Padding(
-                      padding: const EdgeInsets.only(left: 24, right: 24),
-                      child: Text(
-                        info.information,
-                        style: TextStyle(fontSize: 20, color: darkTextColor),
+                      padding: const EdgeInsets.all(8.0),
+                      child: TextField(
+                        controller: amountController,
+                        decoration: InputDecoration(hintText: "Montant"),
+                        keyboardType: TextInputType.number,
                       ),
                     ),
-                    SizedBox(height: 10),
-                    FlatButton(
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20)),
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
-                      child:
-                      Text("Retour", style: TextStyle(color: Colors.white)),
-                      color: darkAccentColor,
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(0,8,0,8),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: <Widget>[
+                          FlatButton(
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(20)),
+                            onPressed: () {
+                              setState(() {
+                                Navigator.of(context).pop(null);
+                              });
+                            },
+                            child: Text("Retour",
+                                style: TextStyle(color: Colors.white)),
+                            color: mainBackgroundColor,
+                          ),
+                          FlatButton(
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(20)),
+                            onPressed: () {
+                              setState(() {
+                                SalesInfo infoTemp = SalesInfo(
+                                    id: 0,
+                                    information: infoController.text.toString(),
+                                    amount: int.parse(
+                                        amountController.text.toString()),
+                                    type: type);
+                                salesInfoDbManager.insert(infoTemp);
+                                Navigator.of(context).pop(infoTemp);
+                              });
+                            },
+                            child: Text("Ajouter",
+                                style: TextStyle(color: Colors.white)),
+                            color: darkAccentColor,
+                          )
+                        ],
+                      ),
                     )
                   ],
-                )
-            ),
+                )),
           );
         });
   }
