@@ -1,7 +1,9 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shop_manager/Database/DatabaseManager.dart';
 import 'package:shop_manager/Database/SalesInfoDbManager.dart';
 import 'package:shop_manager/Models/SalesInfo.dart';
+import 'package:shop_manager/Scenes/SalesInfoDetails.dart';
 
 class DaySessionScene extends StatefulWidget {
   @override
@@ -9,13 +11,14 @@ class DaySessionScene extends StatefulWidget {
 }
 
 class _DaySessionSceneState extends State<DaySessionScene> {
-  static Color mainBackgroundColor = Color(0xFF56104F);
-  static Color darkBackgroundColor = Color(0xFFf4f4f4);
-  static Color darkAccentColor = Color(0xFF951556);
-  static Color lightAccentColor = Color(0xFFE9B4D2);
-  static Color darkTextColor = Color(0xFF333333);
-  static Color lightTextColor = Color(0xFFFEFEFE);
-  static Color lightTransparentTextColor = Color(0xFFDCDCDC);
+
+  Color mainBackgroundColor = Color(0xFF56104F);
+  Color darkBackgroundColor = Color(0xFFf4f4f4);
+  Color darkAccentColor = Color(0xFF951556);
+  Color lightAccentColor = Color(0xFFE9B4D2);
+  Color darkTextColor = Color(0xFF333333);
+  Color lightTextColor = Color(0xFFFEFEFE);
+  Color lightTransparentTextColor = Color(0xFFDCDCDC);
 
   int totalAmount, todayAmount;
   List<SalesInfo> salesInfoList = List();
@@ -131,8 +134,7 @@ class _DaySessionSceneState extends State<DaySessionScene> {
                     onPressed: () {
                       setState(() {
                         salesActionDialog(context, true).then((onValue) {
-                          if(onValue != null)
-                            sellingAction(onValue);
+                          if (onValue != null) sellingAction(onValue);
                         });
                       });
                     }),
@@ -149,8 +151,7 @@ class _DaySessionSceneState extends State<DaySessionScene> {
                     onPressed: () {
                       setState(() {
                         salesActionDialog(context, false).then((onValue) {
-                          if(onValue != null)
-                          buyingAction(onValue);
+                          if (onValue != null) buyingAction(onValue);
                         });
                       });
                     })
@@ -175,7 +176,8 @@ class _DaySessionSceneState extends State<DaySessionScene> {
   Widget salesInfoCard(int index, SalesInfo info) {
     return GestureDetector(
       onTap: () {
-        //salesActionDialog(context, info);
+        Navigator.push(context,
+            CupertinoPageRoute(builder: (context) => SalesInfoDetails(info)));
       },
       child: Card(
         color: lightTextColor,
@@ -250,8 +252,8 @@ class _DaySessionSceneState extends State<DaySessionScene> {
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
             child: Padding(
                 padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
+                child: ListView(
+                  shrinkWrap: true,
                   children: <Widget>[
                     Image(
                       image: AssetImage(
@@ -275,7 +277,7 @@ class _DaySessionSceneState extends State<DaySessionScene> {
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.fromLTRB(0,8,0,8),
+                      padding: const EdgeInsets.fromLTRB(0, 8, 0, 8),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: <Widget>[
