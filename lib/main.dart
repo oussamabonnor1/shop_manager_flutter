@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:shop_manager/Database/DatabaseManager.dart';
 import 'package:shop_manager/Database/SalesInfoDbManager.dart';
+import 'package:shop_manager/Models/DaySalesInfo.dart';
 import 'package:shop_manager/Models/SalesInfo.dart';
 import 'package:shop_manager/Scenes/DaySessionScene.dart';
 
@@ -14,7 +15,7 @@ void main() {
       initialRoute: "/",
       routes: {
         "/day_session_scene": (context) => HomePage(),
-        "/": (context) => DaySessionScene(),
+        "/": (context) => DaySessionScene(new DaySalesInfo(id: 0, dailyProfit: 0)),
       }));
 }
 

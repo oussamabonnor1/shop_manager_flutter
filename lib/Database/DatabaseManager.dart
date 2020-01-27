@@ -6,6 +6,7 @@ class DatabaseManager {
 
   String tableSalesInfoName = "salesInfo";
   String idSalesInfoColumn = "id";
+  String dayIdSalesInfoColumn = "dayId";
   String informationColumn = "information";
   String priceColumn = "price";
   String typeColumn = "type";
@@ -37,7 +38,8 @@ class DatabaseManager {
   Future createDatabase(Database db) async {
     String sqlQuery = "CREATE TABLE IF NOT EXISTS " +
         tableSalesInfoName +
-        " ($idSalesInfoColumn INTEGER," +
+        " ($idSalesInfoColumn INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL," +
+        " $dayIdSalesInfoColumn INTEGER," +
         "$informationColumn TEXT," +
         "$priceColumn INTEGER," +
         "$typeColumn BIT)";

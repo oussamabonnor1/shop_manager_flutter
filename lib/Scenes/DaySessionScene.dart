@@ -2,10 +2,16 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shop_manager/Database/DatabaseManager.dart';
 import 'package:shop_manager/Database/SalesInfoDbManager.dart';
+import 'package:shop_manager/Models/DaySalesInfo.dart';
 import 'package:shop_manager/Models/SalesInfo.dart';
 import 'package:shop_manager/Scenes/SalesInfoDetails.dart';
 
 class DaySessionScene extends StatefulWidget {
+
+  DaySalesInfo daySalesInfo;
+
+  DaySessionScene(this.daySalesInfo);
+
   @override
   _DaySessionSceneState createState() => _DaySessionSceneState();
 }
@@ -27,8 +33,10 @@ class _DaySessionSceneState extends State<DaySessionScene> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
+
+    widget.daySalesInfo = new DaySalesInfo(id: 0, dailyProfit: 0);
+
     totalAmount = 0;
     todayAmount = 0;
 
@@ -40,7 +48,7 @@ class _DaySessionSceneState extends State<DaySessionScene> {
   }
 
   void fillSalesList(SalesInfoDbManager dbManager) async {
-    salesInfoList = await dbManager.getAllSalesInfo(0);
+    salesInfoList = await dbManager.getAllSalesInfo(widget.daySalesInfo.id);
     setState(() {
       if (salesInfoList == null) {
         salesInfoList = new List();
@@ -177,7 +185,7 @@ class _DaySessionSceneState extends State<DaySessionScene> {
     return GestureDetector(
       onTap: () {
         Navigator.push(context,
-            CupertinoPageRoute(builder: (context) => SalesInfoDetails(info)));
+            CupertinoPageRoute(builder: (context) => SalesInfoDetails(info, salesInfoDbManager)));
       },
       child: Card(
         color: lightTextColor,
@@ -247,6 +255,7 @@ class _DaySessionSceneState extends State<DaySessionScene> {
     return showDialog(
         context: context,
         builder: (context) {
+          FocusNode focusNode = new FocusNode();
           return Dialog(
             shape:
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
@@ -263,6 +272,10 @@ class _DaySessionSceneState extends State<DaySessionScene> {
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: TextField(
+                        textInputAction: TextInputAction.next,
+                        onSubmitted: (v){
+                          FocusScope.of(context).requestFocus(focusNode);
+                        },
                           controller: infoController,
                           decoration:
                               InputDecoration(hintText: "Titre de transaction"),
@@ -271,6 +284,7 @@ class _DaySessionSceneState extends State<DaySessionScene> {
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: TextField(
+                        focusNode: focusNode,
                         controller: amountController,
                         decoration: InputDecoration(hintText: "Montant"),
                         keyboardType: TextInputType.number,
@@ -299,7 +313,7 @@ class _DaySessionSceneState extends State<DaySessionScene> {
                             onPressed: () {
                               setState(() {
                                 SalesInfo infoTemp = SalesInfo(
-                                    id: 0,
+                                    dayId: widget.daySalesInfo.id,
                                     information: infoController.text.toString(),
                                     amount: int.parse(
                                         amountController.text.toString()),

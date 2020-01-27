@@ -1,13 +1,15 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:shop_manager/Database/SalesInfoDbManager.dart';
 import 'package:shop_manager/Models/SalesInfo.dart';
 
 class SalesInfoDetails extends StatefulWidget {
 
   SalesInfo info;
+  SalesInfoDbManager salesDbManager;
 
-  SalesInfoDetails(this.info);
+  SalesInfoDetails(this.info, this.salesDbManager);
 
   @override
   _SalesInfoDetailsState createState() => _SalesInfoDetailsState();
@@ -17,7 +19,7 @@ class _SalesInfoDetailsState extends State<SalesInfoDetails> {
 
   Color mainBackgroundColor = Color(0xFF56104F);
   Color darkBackgroundColor = Color(0xFFf4f4f4);
-  Color darkAccentColor = Color(0xFFFF6584);
+  Color darkAccentColor = Color(0xFF951556);
   Color lightAccentColor = Color(0xFFE9B4D2);
   Color darkTextColor = Color(0xFF333333);
   Color lightTextColor = Color(0xFFFEFEFE);
@@ -38,7 +40,7 @@ class _SalesInfoDetailsState extends State<SalesInfoDetails> {
                 Expanded(
                   flex: 6,
                   child: Card(
-                    color: Color(0xFF3F3D56),
+                    color: Color(0xFF490E43),
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(15)),
                     child: Column(
@@ -56,7 +58,8 @@ class _SalesInfoDetailsState extends State<SalesInfoDetails> {
                                       color: lightTransparentTextColor)),
                               GestureDetector(
                                 onTap: () {
-                                  //TODO: create delete function
+                                  widget.salesDbManager.deleteSalesInfo(widget.info.id);
+                                  Navigator.pop(context);
                                 },
                                 child: CircleAvatar(
                                   backgroundColor: darkAccentColor,
@@ -101,7 +104,7 @@ class _SalesInfoDetailsState extends State<SalesInfoDetails> {
             Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: <Widget>[
-                Expanded(flex: 4, child: SvgPicture.asset("images/cookie.svg")),
+                Expanded(flex: 4, child: Image.asset("images/cookie_png.png")),
                 Expanded(flex: 3, child: SizedBox()),
               ],
             )

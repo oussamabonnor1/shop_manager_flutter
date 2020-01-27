@@ -6,6 +6,7 @@ class SalesInfoDbManager {
   Database db;
   String tableName = "salesInfo";
   String idColumn = "id";
+  String dayIdColumn = "dayId";
   String informationColumn = "information";
   String priceColumn = "price";
   String typeColumn = "type";

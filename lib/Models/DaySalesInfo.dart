@@ -5,7 +5,7 @@ class DaySalesInfo {
   int id;
   int dailyProfit;
 
-  DaySalesInfo(this.id, this.dailyProfit);
+  DaySalesInfo({this.id, this.dailyProfit});
 
   Map<String, dynamic> toMap() {
     var map = <String, dynamic>{
