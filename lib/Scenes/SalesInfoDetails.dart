@@ -15,7 +15,7 @@ class SalesInfoDetails extends StatefulWidget {
   _SalesInfoDetailsState createState() => _SalesInfoDetailsState();
 }
 
-class _SalesInfoDetailsState extends State<SalesInfoDetails> {
+class _SalesInfoDetailsState extends State<SalesInfoDetails>{
 
   Color mainBackgroundColor = Color(0xFF56104F);
   Color darkBackgroundColor = Color(0xFFf4f4f4);
@@ -25,6 +25,10 @@ class _SalesInfoDetailsState extends State<SalesInfoDetails> {
   Color lightTextColor = Color(0xFFFEFEFE);
   Color lightTransparentTextColor = Color(0xFFDCDCDC);
 
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {

@@ -5,8 +5,9 @@ import 'package:shop_manager/Database/SalesInfoDbManager.dart';
 import 'package:shop_manager/Models/DaySalesInfo.dart';
 import 'package:shop_manager/Models/SalesInfo.dart';
 import 'package:shop_manager/Scenes/SalesInfoDetails.dart';
+import 'package:shop_manager/main.dart';
 
-class DaySessionScene extends StatefulWidget {
+class DaySessionScene extends StatefulWidget{
 
   DaySalesInfo daySalesInfo;
 
@@ -16,7 +17,7 @@ class DaySessionScene extends StatefulWidget {
   _DaySessionSceneState createState() => _DaySessionSceneState();
 }
 
-class _DaySessionSceneState extends State<DaySessionScene> {
+class _DaySessionSceneState extends State<DaySessionScene> with RouteAware {
 
   Color mainBackgroundColor = Color(0xFF56104F);
   Color darkBackgroundColor = Color(0xFFf4f4f4);
@@ -30,6 +31,18 @@ class _DaySessionSceneState extends State<DaySessionScene> {
   List<SalesInfo> salesInfoList = List();
   DatabaseManager dbManager;
   SalesInfoDbManager salesInfoDbManager;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    routeObserver.subscribe(this, ModalRoute.of(context));
+  }
+
+  @override
+  void didPopNext() {
+    super.didPopNext();
+    fillSalesList(salesInfoDbManager);
+  }
 
   @override
   void initState() {
@@ -240,12 +253,12 @@ class _DaySessionSceneState extends State<DaySessionScene> {
   void sellingAction(SalesInfo info) {
     todayAmount += info.amount;
     totalAmount += info.amount;
-    salesInfoList.insert(0, info);
+    salesInfoList.insert(widget.daySalesInfo.id, info);
   }
 
   void buyingAction(SalesInfo info) {
     totalAmount -= info.amount;
-    salesInfoList.insert(0, info);
+    salesInfoList.insert(widget.daySalesInfo.id, info);
   }
 
   Future<SalesInfo> salesActionDialog(BuildContext context, bool type) {
@@ -334,4 +347,5 @@ class _DaySessionSceneState extends State<DaySessionScene> {
           );
         });
   }
+
 }

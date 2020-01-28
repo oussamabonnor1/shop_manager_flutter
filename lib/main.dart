@@ -8,9 +8,12 @@ import 'package:shop_manager/Models/DaySalesInfo.dart';
 import 'package:shop_manager/Models/SalesInfo.dart';
 import 'package:shop_manager/Scenes/DaySessionScene.dart';
 
+final RouteObserver<PageRoute> routeObserver = RouteObserver<PageRoute>();
+
 void main() {
   runApp(MaterialApp(
       title: "Shop Manager",
+      navigatorObservers: [routeObserver],
       debugShowCheckedModeBanner: false,
       initialRoute: "/",
       routes: {
