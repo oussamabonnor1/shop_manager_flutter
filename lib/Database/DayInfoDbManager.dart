@@ -16,16 +16,15 @@ class DaySalesInfoDbManager{
     return salesInfo;
   }
 
-  /*Future<SalesInfo> getSalesInfo(int id) async {
+  Future<DaySalesInfo> getDayInfo(int id) async {
     List<Map> maps = await db.query(tableName,
-        columns: [idColumn, informationColumn, priceColumn, typeColumn],
         where: '$idColumn = ?',
         whereArgs: [id]);
     if (maps.length > 0) {
-      return SalesInfo.fromMap(maps.first);
+      return DaySalesInfo.fromMap(maps.first);
     }
     return null;
-  }*/
+  }
 
   Future<List<DaySalesInfo>> getAllDailySalesInfo(int id) async {
     List<Map> maps = await db.query(tableName);

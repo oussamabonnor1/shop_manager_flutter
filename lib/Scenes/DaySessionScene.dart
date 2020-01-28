@@ -1,14 +1,14 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shop_manager/Database/DatabaseManager.dart';
+import 'package:shop_manager/Database/DayInfoDbManager.dart';
 import 'package:shop_manager/Database/SalesInfoDbManager.dart';
 import 'package:shop_manager/Models/DaySalesInfo.dart';
 import 'package:shop_manager/Models/SalesInfo.dart';
 import 'package:shop_manager/Scenes/SalesInfoDetails.dart';
-import 'package:shop_manager/main.dart';
+import 'package:shop_manager/Scenes/HomeScene.dart';
 
-class DaySessionScene extends StatefulWidget{
-
+class DaySessionScene extends StatefulWidget {
   DaySalesInfo daySalesInfo;
 
   DaySessionScene(this.daySalesInfo);
@@ -18,7 +18,6 @@ class DaySessionScene extends StatefulWidget{
 }
 
 class _DaySessionSceneState extends State<DaySessionScene> with RouteAware {
-
   Color mainBackgroundColor = Color(0xFF56104F);
   Color darkBackgroundColor = Color(0xFFf4f4f4);
   Color darkAccentColor = Color(0xFF951556);
@@ -31,6 +30,7 @@ class _DaySessionSceneState extends State<DaySessionScene> with RouteAware {
   List<SalesInfo> salesInfoList = List();
   DatabaseManager dbManager;
   SalesInfoDbManager salesInfoDbManager;
+  DaySalesInfoDbManager daySalesInfoDbManager;
 
   @override
   void didChangeDependencies() {
@@ -56,6 +56,7 @@ class _DaySessionSceneState extends State<DaySessionScene> with RouteAware {
     dbManager = new DatabaseManager();
     dbManager.initDatabase().then((onValue) {
       salesInfoDbManager = new SalesInfoDbManager(dbManager.db);
+      daySalesInfoDbManager = new DaySalesInfoDbManager(dbManager.db);
       fillSalesList(salesInfoDbManager);
     });
   }
@@ -67,7 +68,11 @@ class _DaySessionSceneState extends State<DaySessionScene> with RouteAware {
         salesInfoList = new List();
         print("not success");
       } else {
-        print("success");
+        salesInfoList.forEach((element) {
+          todayAmount += element.amount;
+        });
+        widget.daySalesInfo.dailyProfit = todayAmount;
+        daySalesInfoDbManager.update(widget.daySalesInfo);
       }
     });
   }
@@ -197,8 +202,11 @@ class _DaySessionSceneState extends State<DaySessionScene> with RouteAware {
   Widget salesInfoCard(int index, SalesInfo info) {
     return GestureDetector(
       onTap: () {
-        Navigator.push(context,
-            CupertinoPageRoute(builder: (context) => SalesInfoDetails(info, salesInfoDbManager)));
+        Navigator.push(
+            context,
+            CupertinoPageRoute(
+                builder: (context) =>
+                    SalesInfoDetails(info, salesInfoDbManager)));
       },
       child: Card(
         color: lightTextColor,
@@ -253,12 +261,18 @@ class _DaySessionSceneState extends State<DaySessionScene> with RouteAware {
   void sellingAction(SalesInfo info) {
     todayAmount += info.amount;
     totalAmount += info.amount;
+    widget.daySalesInfo.dailyProfit = todayAmount;
+
     salesInfoList.insert(widget.daySalesInfo.id, info);
+    daySalesInfoDbManager.update(widget.daySalesInfo);
   }
 
   void buyingAction(SalesInfo info) {
     totalAmount -= info.amount;
+    widget.daySalesInfo.dailyProfit = todayAmount;
+
     salesInfoList.insert(widget.daySalesInfo.id, info);
+    daySalesInfoDbManager.update(widget.daySalesInfo);
   }
 
   Future<SalesInfo> salesActionDialog(BuildContext context, bool type) {
@@ -285,10 +299,10 @@ class _DaySessionSceneState extends State<DaySessionScene> with RouteAware {
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: TextField(
-                        textInputAction: TextInputAction.next,
-                        onSubmitted: (v){
-                          FocusScope.of(context).requestFocus(focusNode);
-                        },
+                          textInputAction: TextInputAction.next,
+                          onSubmitted: (v) {
+                            FocusScope.of(context).requestFocus(focusNode);
+                          },
                           controller: infoController,
                           decoration:
                               InputDecoration(hintText: "Titre de transaction"),
@@ -347,5 +361,4 @@ class _DaySessionSceneState extends State<DaySessionScene> with RouteAware {
           );
         });
   }
-
 }
