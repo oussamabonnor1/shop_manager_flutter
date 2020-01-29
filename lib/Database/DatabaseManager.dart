@@ -12,7 +12,8 @@ class DatabaseManager {
   String typeColumn = "type";
 
   String tableDailySalesInfo = "daySalesInfo";
-  String idDailySalesInfoColumn = "id";
+  String monthDailySalesInfoColumn = "month";
+  String dayDailySalesInfoColumn = "day";
   String dailyProfitColumn = "dailyProfit";
 
   Database db;
@@ -48,7 +49,8 @@ class DatabaseManager {
 
     sqlQuery = "CREATE TABLE IF NOT EXISTS " +
         tableDailySalesInfo +
-        " ($idDailySalesInfoColumn INTEGER," +
+        " ($monthDailySalesInfoColumn INTEGER," +
+        "$dayDailySalesInfoColumn INTEGER," +
         "$dailyProfitColumn INTEGER)";
 
     await db.execute(sqlQuery);

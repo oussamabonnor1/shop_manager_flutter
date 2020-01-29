@@ -5,13 +5,14 @@ import 'package:shop_manager/Database/DayInfoDbManager.dart';
 import 'package:shop_manager/Database/SalesInfoDbManager.dart';
 import 'package:shop_manager/Models/DaySalesInfo.dart';
 import 'package:shop_manager/Models/SalesInfo.dart';
-import 'package:shop_manager/Scenes/SalesInfoDetails.dart';
 import 'package:shop_manager/Scenes/HomeScene.dart';
+import 'package:shop_manager/Scenes/SalesInfoDetails.dart';
 
 class DaySessionScene extends StatefulWidget {
   DaySalesInfo daySalesInfo;
+  DatabaseManager dbManager;
 
-  DaySessionScene(this.daySalesInfo);
+  DaySessionScene(this.dbManager, this.daySalesInfo);
 
   @override
   _DaySessionSceneState createState() => _DaySessionSceneState();
@@ -28,7 +29,6 @@ class _DaySessionSceneState extends State<DaySessionScene> with RouteAware {
 
   int totalAmount, todayAmount;
   List<SalesInfo> salesInfoList = List();
-  DatabaseManager dbManager;
   SalesInfoDbManager salesInfoDbManager;
   DaySalesInfoDbManager daySalesInfoDbManager;
 
@@ -47,22 +47,15 @@ class _DaySessionSceneState extends State<DaySessionScene> with RouteAware {
   @override
   void initState() {
     super.initState();
-
-    widget.daySalesInfo = new DaySalesInfo(id: 0, dailyProfit: 0);
-
     totalAmount = 0;
     todayAmount = 0;
-
-    dbManager = new DatabaseManager();
-    dbManager.initDatabase().then((onValue) {
-      salesInfoDbManager = new SalesInfoDbManager(dbManager.db);
-      daySalesInfoDbManager = new DaySalesInfoDbManager(dbManager.db);
-      fillSalesList(salesInfoDbManager);
-    });
+    daySalesInfoDbManager = new DaySalesInfoDbManager(widget.dbManager.db);
+    salesInfoDbManager = new SalesInfoDbManager(widget.dbManager.db);
+    fillSalesList(salesInfoDbManager);
   }
 
   void fillSalesList(SalesInfoDbManager dbManager) async {
-    salesInfoList = await dbManager.getAllSalesInfo(widget.daySalesInfo.id);
+    salesInfoList = await dbManager.getAllSalesInfo(widget.daySalesInfo.month);
     setState(() {
       if (salesInfoList == null) {
         salesInfoList = new List();
@@ -192,8 +185,8 @@ class _DaySessionSceneState extends State<DaySessionScene> with RouteAware {
                         Divider(height: 3, color: Colors.transparent),
                     itemCount: salesInfoList.length,
                     padding: EdgeInsets.fromLTRB(8, 0, 8, 0),
-                    itemBuilder: (context, index) => salesInfoCard(index, salesInfoList[index])
-                    ))
+                    itemBuilder: (context, index) =>
+                        salesInfoCard(index, salesInfoList[index])))
           ],
         ),
       ),
@@ -264,7 +257,7 @@ class _DaySessionSceneState extends State<DaySessionScene> with RouteAware {
     totalAmount += info.amount;
     widget.daySalesInfo.dailyProfit = todayAmount;
 
-    salesInfoList.insert(widget.daySalesInfo.id, info);
+    salesInfoList.insert(0, info);
     daySalesInfoDbManager.update(widget.daySalesInfo);
   }
 
@@ -272,7 +265,7 @@ class _DaySessionSceneState extends State<DaySessionScene> with RouteAware {
     totalAmount -= info.amount;
     widget.daySalesInfo.dailyProfit = todayAmount;
 
-    salesInfoList.insert(widget.daySalesInfo.id, info);
+    salesInfoList.insert(0, info);
     daySalesInfoDbManager.update(widget.daySalesInfo);
   }
 
@@ -341,7 +334,7 @@ class _DaySessionSceneState extends State<DaySessionScene> with RouteAware {
                             onPressed: () {
                               setState(() {
                                 SalesInfo infoTemp = SalesInfo(
-                                    dayId: widget.daySalesInfo.id,
+                                    dayId: widget.daySalesInfo.month,
                                     information: infoController.text.toString(),
                                     amount: int.parse(
                                         amountController.text.toString()),

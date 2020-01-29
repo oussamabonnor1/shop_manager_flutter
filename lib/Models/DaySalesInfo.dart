@@ -1,22 +1,25 @@
-String idColumn = "id";
+String idColumn = "month";
+String dayColumn = "day";
 String dailyProfitColumn = "dailyProfit";
 
 class DaySalesInfo {
-  int id;
+  int month, day;
   int dailyProfit;
 
-  DaySalesInfo({this.id, this.dailyProfit});
+  DaySalesInfo({this.month, this.day, this.dailyProfit});
 
   Map<String, dynamic> toMap() {
     var map = <String, dynamic>{
-      idColumn: id,
+      idColumn: month,
+      dayColumn: day,
       dailyProfitColumn: dailyProfit,
     };
     return map;
   }
 
   DaySalesInfo.fromMap(Map<String, dynamic> map) {
-    id = map[idColumn];
+    month = map[idColumn];
+    day = map[dayColumn];
     dailyProfit = map[dailyProfitColumn];
   }
 }
