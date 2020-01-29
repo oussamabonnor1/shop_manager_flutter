@@ -75,6 +75,7 @@ class _HomePageState extends State<HomePage> with RouteAware {
 
     totalAmount = 0;
     monthlyAmount = 0;
+    selectedCategory = 0;
 
     dbManager = DatabaseManager();
     dbManager.initDatabase().then((onValue) {

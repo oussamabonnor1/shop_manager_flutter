@@ -55,6 +55,7 @@ class _DaySessionSceneState extends State<DaySessionScene> with RouteAware {
   }
 
   void fillSalesList(SalesInfoDbManager dbManager) async {
+    todayAmount = 0;
     salesInfoList = await dbManager.getAllSalesInfo(widget.daySalesInfo.month);
     setState(() {
       if (salesInfoList == null) {
