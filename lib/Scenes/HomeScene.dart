@@ -187,24 +187,13 @@ class _HomePageState extends State<HomePage> with RouteAware {
             child: Center(
               child: CircleAvatar(
                 backgroundColor: lightAccentColor,
-                child: IconButton(
-                    icon: Icon(Icons.create, color: lightTextColor),
-                    onPressed: () async {
-                      int day = DateTime.now().day;
-                      int month = DateTime.now().month;
-                      DaySalesInfo lastEntry =
-                          await daySalesInfoDbManager.getDayInfo(month, day);
-                      if (lastEntry == null) {
-                        DaySalesInfo daySessionTemp =
-                            await daySalesInfoDbManager.insert(DaySalesInfo(
-                                month: month, day: day, dailyProfit: 0));
-                        Navigator.push(
-                            context,
-                            CupertinoPageRoute(
-                                builder: (context) => DaySessionScene(
-                                    dbManager, daySessionTemp)));
-                      }
-                    }),
+                child: Builder( //using builder to avoid scaffold.of(context) issue
+                  builder: (context) => IconButton(
+                      icon: Icon(Icons.create, color: lightTextColor),
+                      onPressed: () async {
+                        createNewDailySession(context);
+                      }),
+                ),
               ),
             ),
           ),
@@ -288,7 +277,7 @@ class _HomePageState extends State<HomePage> with RouteAware {
       onTap: () {
         setState(() {
           selectedCategory = index;
-          fillInformation(selectedCategory + 2);
+          fillInformation(index == 0 ? DateTime.now().month : selectedCategory);
         });
       },
       child: Card(
@@ -312,10 +301,36 @@ class _HomePageState extends State<HomePage> with RouteAware {
   }
 
   fillInformation(int month) async {
+    monthlyAmount = 0;
     daysSales = await daySalesInfoDbManager.getAllDailySalesInfo(month);
     if (daysSales == null) {
       daysSales = List();
     }
     daysSales.forEach((element) => monthlyAmount += element.dailyProfit);
+  }
+
+  createNewDailySession(BuildContext context) async {
+    int day = DateTime.now().day;
+    int month = DateTime.now().month;
+    DaySalesInfo lastEntry = await daySalesInfoDbManager.getDayInfo(month, day);
+    if (lastEntry == null) {
+      DaySalesInfo daySessionTemp = await daySalesInfoDbManager
+          .insert(DaySalesInfo(month: month, day: day, dailyProfit: 0));
+      Navigator.push(
+          context,
+          CupertinoPageRoute(
+              builder: (context) =>
+                  DaySessionScene(dbManager, daySessionTemp)));
+    } else {
+      SnackBar snackbar = SnackBar(
+        content: Text("Cette session existe deja!"),
+        action: SnackBarAction(
+            label: "Ok",
+            onPressed: () {
+              Scaffold.of(context).hideCurrentSnackBar();
+            }),
+      );
+      Scaffold.of(context).showSnackBar(snackbar);
+    }
   }
 }
