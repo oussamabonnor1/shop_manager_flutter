@@ -192,9 +192,8 @@ class _DaySessionSceneState extends State<DaySessionScene> with RouteAware {
                         Divider(height: 3, color: Colors.transparent),
                     itemCount: salesInfoList.length,
                     padding: EdgeInsets.fromLTRB(8, 0, 8, 0),
-                    itemBuilder: (context, index) {
-                      return salesInfoCard(index, salesInfoList[index]);
-                    }))
+                    itemBuilder: (context, index) => salesInfoCard(index, salesInfoList[index])
+                    ))
           ],
         ),
       ),
