@@ -32,16 +32,27 @@ class _HomePageState extends State<HomePage> {
   Color darkTextColor = Color(0xFF333333);
   Color lightTextColor = Color(0xFFFEFEFE);
   Color lightTransparentTextColor = Color(0xFFDCDCDC);
+  
+  List<String> months = [
+    "Jan", "Fev", "Mars", "Avr", "Mai", "J"
+  ];
 
-  int totalAmount, todayAmount;
+  int totalAmount, monthlyAmount, selectedCategory;
+
+  @override
+  void initState() {
+    super.initState();
+    totalAmount = 0;
+    monthlyAmount = 0;
+  }
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return Scaffold(
         appBar: AppBar(
-          title: Text("Activité d'aujourdhui"),
           backgroundColor: darkAccentColor,
+          title: Text("Home"),
+          centerTitle: true,
         ),
         body: Container(
             color: darkBackgroundColor,
@@ -56,55 +67,121 @@ class _HomePageState extends State<HomePage> {
                   color: mainBackgroundColor,
                   child: Padding(
                     padding: const EdgeInsets.all(16),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            Text("Contenu de caisse",
-                                style: TextStyle(
-                                    fontSize: 14,
-                                    fontStyle: FontStyle.italic,
-                                    color: lightTransparentTextColor)),
-                            Text(
-                              "$totalAmount Da",
-                              style: TextStyle(
-                                  fontSize: 20,
-                                  color: lightTransparentTextColor),
-                            ),
-                            SizedBox(
-                              height: 15,
-                            ),
-                            Text("Gain du jour:",
-                                style: TextStyle(
-                                    fontSize: 17,
-                                    fontWeight: FontWeight.bold,
-                                    color: lightTextColor)),
-                            Text(
-                              "$todayAmount Da",
-                              style: TextStyle(
-                                  fontSize: 26,
-                                  fontWeight: FontWeight.bold,
-                                  color: lightTextColor),
-                            ),
-                          ],
-                        ),
                         Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: Image.asset(
                               "images/inAppLogo.png",
-                              height: 120,
+                              height: 80,
                             )
                             //SvgPicture.asset("images/cookie.svg",height: 120,),
-                            )
+                            ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: <Widget>[
+                            Column(
+                              children: <Widget>[
+                                Text(
+                                  "$totalAmount Da",
+                                  style: TextStyle(
+                                      fontSize: 24,
+                                      color: lightTextColor),
+                                ),
+                                Text("Contenu de caisse",
+                                    style: TextStyle(
+                                        fontSize: 16,
+                                        fontStyle: FontStyle.italic,
+                                        color: lightTransparentTextColor)),
+                              ],
+                            ),
+                            Column(
+                              children: <Widget>[
+                                Text(
+                                  "$monthlyAmount Da",
+                                  style: TextStyle(
+                                      fontSize: 24,
+                                      color: lightTextColor),
+                                ),
+                                Text("Gain du Mois:",
+                                    style: TextStyle(
+                                        fontSize: 16,
+                                        fontStyle: FontStyle.italic,
+                                        color: lightTransparentTextColor)),
+                              ],
+                            ),
+                          ],
+                        ),
                       ],
                     ),
                   ),
                 ),
                 SizedBox(height: 5),
+                Container(
+                  height: 50,
+                  child: ListView.builder(
+                    shrinkWrap: true,
+                    scrollDirection: Axis.horizontal,
+                    itemCount: months.length,
+                    itemBuilder: (context, index){
+                    return index == selectedCategory
+                        ? selectedCategoryCard(months[index])
+                        : unselectedCategoryCard(months[index], index);
+                  }),
+                )
               ],
             )));
+  }
+
+  Widget selectedCategoryCard(String category) {
+    return GestureDetector(
+      onTap: () {},
+      child: Card(
+        elevation: 0,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        color: lightAccentColor,
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(16, 4, 16, 4),
+          child: Center(
+            child: Text(
+              category,
+              style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 18),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget unselectedCategoryCard(String category, int index) {
+    return GestureDetector(
+      onTap: () {
+        setState(() {
+          selectedCategory = index;
+        });
+      },
+      child: Card(
+        elevation: 0,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        color: darkAccentColor,
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(16, 4, 16, 4),
+          child: Center(
+            child: Text(
+              category,
+              style: TextStyle(
+                  color: lightTextColor,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 18),
+            ),
+          ),
+        ),
+      ),
+    );
   }
 }

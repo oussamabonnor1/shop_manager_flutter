@@ -83,6 +83,8 @@ class _DaySessionSceneState extends State<DaySessionScene> with RouteAware {
       appBar: AppBar(
         title: Text("Activité d'aujourdhui"),
         backgroundColor: darkAccentColor,
+        centerTitle: true,
+        titleSpacing: 5,
       ),
       body: Container(
         color: darkBackgroundColor,
