@@ -27,7 +27,8 @@ class _DaySessionSceneState extends State<DaySessionScene> with RouteAware {
   Color lightTextColor = Color(0xFFFEFEFE);
   Color lightTransparentTextColor = Color(0xFFDCDCDC);
 
-  int totalAmount, todayAmount;
+  List<String> filters = ["Tout", "Vendu", "Acheté"];
+  int totalAmount, todayAmount, selectedFilter;
   List<SalesInfo> salesInfoList = List();
   SalesInfoDbManager salesInfoDbManager;
   DaySalesInfoDbManager daySalesInfoDbManager;
@@ -41,7 +42,7 @@ class _DaySessionSceneState extends State<DaySessionScene> with RouteAware {
   @override
   void didPopNext() {
     super.didPopNext();
-    fillSalesList(salesInfoDbManager);
+    fillSalesList();
   }
 
   @override
@@ -49,14 +50,16 @@ class _DaySessionSceneState extends State<DaySessionScene> with RouteAware {
     super.initState();
     totalAmount = 0;
     todayAmount = 0;
+    selectedFilter = 0;
     daySalesInfoDbManager = new DaySalesInfoDbManager(widget.dbManager.db);
     salesInfoDbManager = new SalesInfoDbManager(widget.dbManager.db);
-    fillSalesList(salesInfoDbManager);
+    fillSalesList();
   }
 
-  void fillSalesList(SalesInfoDbManager dbManager) async {
+  void fillSalesList() async {
     todayAmount = 0;
-    salesInfoList = await dbManager.getAllSalesInfo(widget.daySalesInfo.month);
+    salesInfoList =
+        await salesInfoDbManager.getAllSalesInfo(widget.daySalesInfo.month);
     setState(() {
       if (salesInfoList == null) {
         salesInfoList = new List();
@@ -67,6 +70,20 @@ class _DaySessionSceneState extends State<DaySessionScene> with RouteAware {
         });
         widget.daySalesInfo.dailyProfit = todayAmount;
         daySalesInfoDbManager.update(widget.daySalesInfo);
+      }
+    });
+  }
+
+  void filterSalesList() async {
+    salesInfoList = await salesInfoDbManager.getAllSalesInfo(widget.daySalesInfo.month);
+    setState(() {
+      if (salesInfoList == null) {
+        salesInfoList = new List();
+      } else if(selectedFilter != 0) {
+        for(int i = 0; i < salesInfoList.length; i++){
+          if(salesInfoList.elementAt(i).type == (selectedFilter != 1))
+            salesInfoList.removeAt(i);
+        }
       }
     });
   }
@@ -86,6 +103,7 @@ class _DaySessionSceneState extends State<DaySessionScene> with RouteAware {
           padding: EdgeInsets.all(8),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               Card(
                 elevation: 5,
@@ -141,39 +159,18 @@ class _DaySessionSceneState extends State<DaySessionScene> with RouteAware {
                 ),
               ),
               SizedBox(height: 5),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: <Widget>[
-                  MaterialButton(
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(50)),
-                      color: darkAccentColor,
-                      child: Padding(
-                        padding: const EdgeInsets.fromLTRB(40, 10, 40, 10),
-                        child: Text("Vente",
-                            style:
-                                TextStyle(color: lightTextColor, fontSize: 18)),
-                      ),
-                      onPressed: () {
-                        setState(() {
-
-                        });
-                      }),
-                  MaterialButton(
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(50)),
-                      color: mainBackgroundColor,
-                      child: Padding(
-                        padding: const EdgeInsets.fromLTRB(40, 10, 40, 10),
-                        child: Text("Achat",
-                            style:
-                                TextStyle(color: lightTextColor, fontSize: 18)),
-                      ),
-                      onPressed: () {
-                        setState(() {
-                          });
-                      })
-                ],
+              Container(
+                height: 50,
+                child: ListView.builder(
+                    itemBuilder: (context, index) {
+                      return index == selectedFilter
+                          ? selectedFilterCard(filters.elementAt(index))
+                          : unselectedFilterCard(
+                              filters.elementAt(index), index);
+                    },
+                    itemCount: filters.length,
+                    scrollDirection: Axis.horizontal,
+                ),
               ),
               SizedBox(height: 10),
               Expanded(
@@ -196,14 +193,10 @@ class _DaySessionSceneState extends State<DaySessionScene> with RouteAware {
                 child: Container(
                   decoration: BoxDecoration(
                       color: darkAccentColor,
-                      borderRadius: BorderRadius.only(
-                          bottomRight: Radius.circular(10),
-                          topLeft: Radius.circular(10))),
+                      borderRadius:
+                          BorderRadius.only(topLeft: Radius.circular(10))),
                   child: IconButton(
-                      icon: Icon(
-                        Icons.attach_money,
-                        color: Colors.white,
-                      ),
+                      icon: Icon(Icons.attach_money, color: Colors.white),
                       onPressed: () {
                         salesActionDialog(context, true).then((onValue) {
                           if (onValue != null) sellingAction(onValue);
@@ -215,9 +208,8 @@ class _DaySessionSceneState extends State<DaySessionScene> with RouteAware {
                 child: Container(
                   decoration: BoxDecoration(
                       color: mainBackgroundColor,
-                      borderRadius: BorderRadius.only(
-                          bottomRight: Radius.circular(10),
-                          topLeft: Radius.circular(10))),
+                      borderRadius:
+                          BorderRadius.only(topRight: Radius.circular(10))),
                   child: IconButton(
                       icon: Icon(
                         Icons.shopping_basket,
@@ -311,6 +303,57 @@ class _DaySessionSceneState extends State<DaySessionScene> with RouteAware {
 
     salesInfoList.insert(0, info);
     daySalesInfoDbManager.update(widget.daySalesInfo);
+  }
+
+  Widget selectedFilterCard(String filter) {
+    return GestureDetector(
+      onTap: () {},
+      child: Card(
+        elevation: 4,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        color: darkAccentColor,
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(16, 4, 16, 4),
+          child: Center(
+            child: Text(
+              filter,
+              style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 18),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget unselectedFilterCard(String filter, int index) {
+    return GestureDetector(
+      onTap: () {
+        setState(() {
+          selectedFilter = index;
+          filterSalesList();
+        });
+      },
+      child: Card(
+        elevation: 2,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        color: mainBackgroundColor,
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(16, 4, 16, 4),
+          child: Center(
+            child: Text(
+              filter,
+              style: TextStyle(
+                  color: lightTextColor,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 18),
+            ),
+          ),
+        ),
+      ),
+    );
   }
 
   Future<SalesInfo> salesActionDialog(BuildContext context, bool type) {

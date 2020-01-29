@@ -284,7 +284,7 @@ class _HomePageState extends State<HomePage> with RouteAware {
       child: Card(
         elevation: 4,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        color: lightAccentColor,
+        color: darkAccentColor,
         child: Padding(
           padding: const EdgeInsets.fromLTRB(16, 4, 16, 4),
           child: Center(
@@ -312,7 +312,7 @@ class _HomePageState extends State<HomePage> with RouteAware {
       child: Card(
         elevation: 2,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        color: darkAccentColor,
+        color: mainBackgroundColor,
         child: Padding(
           padding: const EdgeInsets.fromLTRB(16, 4, 16, 4),
           child: Center(
