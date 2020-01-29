@@ -16,6 +16,9 @@ class DatabaseManager {
   String dayDailySalesInfoColumn = "day";
   String dailyProfitColumn = "dailyProfit";
 
+  String tableRegisterInfo = "registerInfo";
+  String registerValueColumn = "registerValue";
+
   Database db;
 
   Future<String> getDatabasePath(String dbName) async {
@@ -54,6 +57,33 @@ class DatabaseManager {
         "$dailyProfitColumn INTEGER)";
 
     await db.execute(sqlQuery);
+
+    sqlQuery = "CREATE TABLE IF NOT EXISTS " +
+        tableRegisterInfo +
+        " ($registerValueColumn INTEGER)";
+
+    await db.execute(sqlQuery);
+
+    int amount = await getRegisterInfo();
+    if(amount < 0)
+      insertRegisterInfo();
+  }
+
+  Future<int> insertRegisterInfo() async {
+    int amount = await db.insert(tableRegisterInfo, <String, dynamic>{registerValueColumn: 0});
+    return amount;
+  }
+
+  Future<int> getRegisterInfo() async {
+    List<Map> maps = await db.query(tableRegisterInfo);
+    if (maps.length > 0) {
+      return maps.first[registerValueColumn];
+    }
+    return -1;
+  }
+
+  Future<int> updateRegisterInfo(int amount) async {
+    return await db.update(tableRegisterInfo, <String, dynamic>{registerValueColumn: amount});
   }
 
   Future close() async => db.close();

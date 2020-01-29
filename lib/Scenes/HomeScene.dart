@@ -73,7 +73,6 @@ class _HomePageState extends State<HomePage> with RouteAware {
   void initState() {
     super.initState();
 
-    totalAmount = 0;
     monthlyAmount = 0;
     selectedCategory = 0;
 
@@ -82,6 +81,7 @@ class _HomePageState extends State<HomePage> with RouteAware {
       daySalesInfoDbManager = DaySalesInfoDbManager(dbManager.db);
       fillInformation(1);
     });
+
   }
 
   @override
@@ -333,6 +333,8 @@ class _HomePageState extends State<HomePage> with RouteAware {
   }
 
   fillInformation(int month) async {
+
+    totalAmount = await dbManager.getRegisterInfo();
     monthlyAmount = 0;
     daysSales = await daySalesInfoDbManager.getAllDailySalesInfo(month);
     if (daysSales == null) {

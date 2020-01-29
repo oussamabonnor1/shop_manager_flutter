@@ -1,15 +1,17 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:shop_manager/Database/DatabaseManager.dart';
 import 'package:shop_manager/Database/SalesInfoDbManager.dart';
 import 'package:shop_manager/Models/SalesInfo.dart';
 
 class SalesInfoDetails extends StatefulWidget {
 
   SalesInfo info;
+  DatabaseManager dbManager;
   SalesInfoDbManager salesDbManager;
 
-  SalesInfoDetails(this.info, this.salesDbManager);
+  SalesInfoDetails(this.info, this.salesDbManager, this.dbManager);
 
   @override
   _SalesInfoDetailsState createState() => _SalesInfoDetailsState();
@@ -61,7 +63,10 @@ class _SalesInfoDetailsState extends State<SalesInfoDetails>{
                                       fontSize: 32,
                                       color: lightTransparentTextColor)),
                               GestureDetector(
-                                onTap: () {
+                                onTap: () async {
+                                  int registerAmount = await widget.dbManager.getRegisterInfo();
+                                  registerAmount -= widget.info.type ? widget.info.amount : -widget.info.amount;
+                                  widget.dbManager.updateRegisterInfo(registerAmount);
                                   widget.salesDbManager.deleteSalesInfo(widget.info.id);
                                   Navigator.pop(context);
                                 },

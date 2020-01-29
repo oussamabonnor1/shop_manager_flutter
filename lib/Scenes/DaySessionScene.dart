@@ -58,6 +58,7 @@ class _DaySessionSceneState extends State<DaySessionScene> with RouteAware {
 
   void fillSalesList() async {
     todayAmount = 0;
+    totalAmount = await widget.dbManager.getRegisterInfo();
     salesInfoList =
         await salesInfoDbManager.getAllSalesInfo(widget.daySalesInfo.month);
     setState(() {
@@ -66,7 +67,8 @@ class _DaySessionSceneState extends State<DaySessionScene> with RouteAware {
         print("not success");
       } else {
         salesInfoList.forEach((element) {
-          todayAmount += element.amount;
+          int amount = element.type ? element.amount : 0;
+          todayAmount += amount;
         });
         widget.daySalesInfo.dailyProfit = todayAmount;
         daySalesInfoDbManager.update(widget.daySalesInfo);
@@ -239,7 +241,7 @@ class _DaySessionSceneState extends State<DaySessionScene> with RouteAware {
             context,
             CupertinoPageRoute(
                 builder: (context) =>
-                    SalesInfoDetails(info, salesInfoDbManager)));
+                    SalesInfoDetails(info, salesInfoDbManager, widget.dbManager)));
       },
       child: Card(
         color: lightTextColor,
@@ -296,6 +298,7 @@ class _DaySessionSceneState extends State<DaySessionScene> with RouteAware {
     totalAmount += info.amount;
     widget.daySalesInfo.dailyProfit = todayAmount;
 
+    widget.dbManager.updateRegisterInfo(totalAmount);
     salesInfoList.insert(0, info);
     daySalesInfoDbManager.update(widget.daySalesInfo);
   }
@@ -304,6 +307,7 @@ class _DaySessionSceneState extends State<DaySessionScene> with RouteAware {
     totalAmount -= info.amount;
     widget.daySalesInfo.dailyProfit = todayAmount;
 
+    widget.dbManager.updateRegisterInfo(totalAmount);
     salesInfoList.insert(0, info);
     daySalesInfoDbManager.update(widget.daySalesInfo);
   }
