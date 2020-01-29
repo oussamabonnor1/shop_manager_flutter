@@ -166,41 +166,62 @@ class _HomePageState extends State<HomePage> with RouteAware {
                     SizedBox(height: 5),
                     Expanded(
                         child: ListView.separated(
-                            itemBuilder: (context, index) =>
-                                dailySalesInfoCard(index, daysSales[index]),
+                            itemBuilder: (context, index) {
+                              return index == 0 ? newDailySessionCard()
+                              : dailySalesInfoCard(index, daysSales[index]);
+                            },
                             separatorBuilder: (context, index) =>
                                 Divider(height: 3, color: Colors.transparent),
                             itemCount: daysSales.length)),
-                    SizedBox(
-                      height: 45,
-                    )
                   ])),
         ),
-        Align(
-          alignment: Alignment.bottomCenter,
-          child: Container(
-            height: 50,
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.only(
-                    topRight: Radius.circular(10),
-                    topLeft: Radius.circular(10)),
-                color: darkAccentColor),
-            child: Center(
-              child: CircleAvatar(
-                backgroundColor: lightAccentColor,
-                child: Builder( //using builder to avoid scaffold.of(context) issue
-                  builder: (context) => IconButton(
-                      icon: Icon(Icons.create, color: lightTextColor),
-                      onPressed: () async {
-                        createNewDailySession(context);
-                      }),
-                ),
-              ),
-            ),
-          ),
-        )
       ]),
     ));
+  }
+
+  Widget newDailySessionCard(){
+    return Builder(
+      builder:(context)=>  GestureDetector(
+        onTap: () {
+          createNewDailySession(context);
+        },
+        child: Card(
+          color: lightTextColor,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                CircleAvatar(
+                    backgroundColor: mainBackgroundColor,
+                    child: Icon(Icons.create, color: lightTextColor,)),
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 16, right: 16),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Text("Nouvelle session...",
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                                color: darkTextColor)),
+                      ],
+                    ),
+                  ),
+                ),
+                Icon(
+                  Icons.add,
+                  color: Colors.grey[600],
+                )
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
   }
 
   Widget dailySalesInfoCard(int index, DaySalesInfo info) {
@@ -305,7 +326,9 @@ class _HomePageState extends State<HomePage> with RouteAware {
     monthlyAmount = 0;
     daysSales = await daySalesInfoDbManager.getAllDailySalesInfo(month);
     if (daysSales == null) {
-      daysSales = List();
+      daysSales = [ DaySalesInfo()];
+    }else{
+      daysSales.insert(0, DaySalesInfo());
     }
     daysSales.forEach((element) => monthlyAmount += element.dailyProfit);
   }
