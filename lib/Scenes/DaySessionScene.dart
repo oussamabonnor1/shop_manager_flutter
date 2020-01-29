@@ -148,9 +148,12 @@ class _DaySessionSceneState extends State<DaySessionScene> with RouteAware {
                       ),
                       Padding(
                           padding: const EdgeInsets.all(8.0),
-                          child: Image.asset(
-                            "images/inAppLogo.png",
-                            height: 120,
+                          child: Hero(
+                            tag: "logo",
+                            child: Image.asset(
+                              "images/inAppLogo.png",
+                              height: 120,
+                            ),
                           )
                           //SvgPicture.asset("images/cookie.svg",height: 120,),
                           )

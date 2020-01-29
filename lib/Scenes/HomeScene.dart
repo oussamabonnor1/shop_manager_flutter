@@ -111,6 +111,17 @@ class _HomePageState extends State<HomePage> with RouteAware {
                             mainAxisSize: MainAxisSize.min,
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: <Widget>[
+                              Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Hero(
+                                    tag: "logo",
+                                    child: Image.asset(
+                                      "images/inAppLogo.png",
+                                      height: 120,
+                                    ),
+                                  )
+                                  //SvgPicture.asset("images/cookie.svg",height: 120,),
+                                  ),
                               Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: <Widget>[
@@ -128,7 +139,7 @@ class _HomePageState extends State<HomePage> with RouteAware {
                                   SizedBox(
                                     height: 15,
                                   ),
-                                  Text("Gain du mois:",
+                                  Text("Gain du mois",
                                       style: TextStyle(
                                           fontSize: 17,
                                           fontWeight: FontWeight.bold,
@@ -141,15 +152,7 @@ class _HomePageState extends State<HomePage> with RouteAware {
                                         color: lightTextColor),
                                   ),
                                 ],
-                              ),
-                              Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Image.asset(
-                                    "images/inAppLogo.png",
-                                    height: 120,
-                                  )
-                                  //SvgPicture.asset("images/cookie.svg",height: 120,),
-                                  )
+                              )
                             ],
                           ),
                         ),
