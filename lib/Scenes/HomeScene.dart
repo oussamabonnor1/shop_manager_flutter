@@ -87,101 +87,105 @@ class _HomePageState extends State<HomePage> with RouteAware {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: SafeArea(
-      child: Stack(children: <Widget>[
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Container(
-              color: darkBackgroundColor,
-              child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: <Widget>[
-                    Card(
-                      elevation: 5,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(15)),
-                      color: mainBackgroundColor,
-                      child: Padding(
-                        padding: const EdgeInsets.all(16),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: <Widget>[
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: <Widget>[
-                                Text("Contenu de caisse",
+      appBar: AppBar(
+        title: Text("Home"),
+        centerTitle: true,
+        backgroundColor: darkAccentColor,
+      ),
+        body: Stack(children: <Widget>[
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Container(
+                color: darkBackgroundColor,
+                child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: <Widget>[
+                      Card(
+                        elevation: 5,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(15)),
+                        color: mainBackgroundColor,
+                        child: Padding(
+                          padding: const EdgeInsets.all(16),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: <Widget>[
+                                  Text("Contenu de caisse",
+                                      style: TextStyle(
+                                          fontSize: 14,
+                                          fontStyle: FontStyle.italic,
+                                          color: lightTransparentTextColor)),
+                                  Text(
+                                    "$totalAmount Da",
                                     style: TextStyle(
-                                        fontSize: 14,
-                                        fontStyle: FontStyle.italic,
-                                        color: lightTransparentTextColor)),
-                                Text(
-                                  "$totalAmount Da",
-                                  style: TextStyle(
-                                      fontSize: 20,
-                                      color: lightTransparentTextColor),
-                                ),
-                                SizedBox(
-                                  height: 15,
-                                ),
-                                Text("Gain du mois:",
+                                        fontSize: 20,
+                                        color: lightTransparentTextColor),
+                                  ),
+                                  SizedBox(
+                                    height: 15,
+                                  ),
+                                  Text("Gain du mois:",
+                                      style: TextStyle(
+                                          fontSize: 17,
+                                          fontWeight: FontWeight.bold,
+                                          color: lightTextColor)),
+                                  Text(
+                                    "$monthlyAmount Da",
                                     style: TextStyle(
-                                        fontSize: 17,
+                                        fontSize: 26,
                                         fontWeight: FontWeight.bold,
-                                        color: lightTextColor)),
-                                Text(
-                                  "$monthlyAmount Da",
-                                  style: TextStyle(
-                                      fontSize: 26,
-                                      fontWeight: FontWeight.bold,
-                                      color: lightTextColor),
-                                ),
-                              ],
-                            ),
-                            Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Image.asset(
-                                  "images/inAppLogo.png",
-                                  height: 120,
-                                )
-                                //SvgPicture.asset("images/cookie.svg",height: 120,),
-                                )
-                          ],
+                                        color: lightTextColor),
+                                  ),
+                                ],
+                              ),
+                              Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Image.asset(
+                                    "images/inAppLogo.png",
+                                    height: 120,
+                                  )
+                                  //SvgPicture.asset("images/cookie.svg",height: 120,),
+                                  )
+                            ],
+                          ),
                         ),
                       ),
-                    ),
-                    SizedBox(height: 5),
-                    Container(
-                      height: 50,
-                      child: ListView.builder(
-                          shrinkWrap: true,
-                          scrollDirection: Axis.horizontal,
-                          itemCount: months.length,
-                          itemBuilder: (context, index) {
-                            return index == selectedCategory
-                                ? selectedCategoryCard(months[index])
-                                : unselectedCategoryCard(months[index], index);
-                          }),
-                    ),
-                    SizedBox(height: 5),
-                    Expanded(
-                        child: ListView.separated(
+                      SizedBox(height: 5),
+                      Container(
+                        height: 50,
+                        child: ListView.builder(
+                            shrinkWrap: true,
+                            scrollDirection: Axis.horizontal,
+                            itemCount: months.length,
                             itemBuilder: (context, index) {
-                              return index == 0 ? newDailySessionCard()
-                              : dailySalesInfoCard(index, daysSales[index]);
-                            },
-                            separatorBuilder: (context, index) =>
-                                Divider(height: 3, color: Colors.transparent),
-                            itemCount: daysSales.length)),
-                  ])),
-        ),
-      ]),
-    ));
+                              return index == selectedCategory
+                                  ? selectedCategoryCard(months[index])
+                                  : unselectedCategoryCard(months[index], index);
+                            }),
+                      ),
+                      SizedBox(height: 5),
+                      Expanded(
+                          child: ListView.separated(
+                              itemBuilder: (context, index) {
+                                return index == 0
+                                    ? newDailySessionCard()
+                                    : dailySalesInfoCard(index, daysSales[index]);
+                              },
+                              separatorBuilder: (context, index) =>
+                                  Divider(height: 3, color: Colors.transparent),
+                              itemCount: daysSales.length)),
+                    ])),
+          ),
+        ]));
   }
 
-  Widget newDailySessionCard(){
+  Widget newDailySessionCard() {
     return Builder(
-      builder:(context)=>  GestureDetector(
+      builder: (context) => GestureDetector(
         onTap: () {
           createNewDailySession(context);
         },
@@ -195,7 +199,10 @@ class _HomePageState extends State<HomePage> with RouteAware {
               children: <Widget>[
                 CircleAvatar(
                     backgroundColor: mainBackgroundColor,
-                    child: Icon(Icons.create, color: lightTextColor,)),
+                    child: Icon(
+                      Icons.create,
+                      color: lightTextColor,
+                    )),
                 Expanded(
                   child: Padding(
                     padding: const EdgeInsets.only(left: 16, right: 16),
@@ -326,9 +333,9 @@ class _HomePageState extends State<HomePage> with RouteAware {
     monthlyAmount = 0;
     daysSales = await daySalesInfoDbManager.getAllDailySalesInfo(month);
     if (daysSales == null) {
-      daysSales = [ DaySalesInfo()];
-    }else{
-      daysSales.insert(0, DaySalesInfo());
+      daysSales = [DaySalesInfo()];
+    } else {
+      daysSales.insert(0, DaySalesInfo(dailyProfit: 0));
     }
     daysSales.forEach((element) => monthlyAmount += element.dailyProfit);
   }

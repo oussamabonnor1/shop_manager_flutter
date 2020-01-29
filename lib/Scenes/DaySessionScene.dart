@@ -80,117 +80,160 @@ class _DaySessionSceneState extends State<DaySessionScene> with RouteAware {
         centerTitle: true,
         titleSpacing: 5,
       ),
-      body: Container(
-        color: darkBackgroundColor,
-        padding: EdgeInsets.all(8),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: <Widget>[
-            Card(
-              elevation: 5,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(15)),
-              color: mainBackgroundColor,
-              child: Padding(
-                padding: const EdgeInsets.all(16),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Text("Contenu de caisse",
+      body: Stack(children: <Widget>[
+        Container(
+          color: darkBackgroundColor,
+          padding: EdgeInsets.all(8),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: <Widget>[
+              Card(
+                elevation: 5,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(15)),
+                color: mainBackgroundColor,
+                child: Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Text("Contenu de caisse",
+                              style: TextStyle(
+                                  fontSize: 14,
+                                  fontStyle: FontStyle.italic,
+                                  color: lightTransparentTextColor)),
+                          Text(
+                            "$totalAmount Da",
                             style: TextStyle(
-                                fontSize: 14,
-                                fontStyle: FontStyle.italic,
-                                color: lightTransparentTextColor)),
-                        Text(
-                          "$totalAmount Da",
-                          style: TextStyle(
-                              fontSize: 20, color: lightTransparentTextColor),
-                        ),
-                        SizedBox(
-                          height: 15,
-                        ),
-                        Text("Gain du jour:",
+                                fontSize: 20, color: lightTransparentTextColor),
+                          ),
+                          SizedBox(
+                            height: 15,
+                          ),
+                          Text("Gain du jour:",
+                              style: TextStyle(
+                                  fontSize: 17,
+                                  fontWeight: FontWeight.bold,
+                                  color: lightTextColor)),
+                          Text(
+                            "$todayAmount Da",
                             style: TextStyle(
-                                fontSize: 17,
+                                fontSize: 26,
                                 fontWeight: FontWeight.bold,
-                                color: lightTextColor)),
-                        Text(
-                          "$todayAmount Da",
-                          style: TextStyle(
-                              fontSize: 26,
-                              fontWeight: FontWeight.bold,
-                              color: lightTextColor),
-                        ),
-                      ],
-                    ),
-                    Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Image.asset(
-                          "images/inAppLogo.png",
-                          height: 120,
-                        )
-                        //SvgPicture.asset("images/cookie.svg",height: 120,),
-                        )
-                  ],
+                                color: lightTextColor),
+                          ),
+                        ],
+                      ),
+                      Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Image.asset(
+                            "images/inAppLogo.png",
+                            height: 120,
+                          )
+                          //SvgPicture.asset("images/cookie.svg",height: 120,),
+                          )
+                    ],
+                  ),
                 ),
               ),
-            ),
-            SizedBox(height: 5),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: <Widget>[
-                MaterialButton(
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(50)),
-                    color: darkAccentColor,
-                    child: Padding(
-                      padding: const EdgeInsets.fromLTRB(40, 10, 40, 10),
-                      child: Text("Vente",
-                          style:
-                              TextStyle(color: lightTextColor, fontSize: 18)),
-                    ),
-                    onPressed: () {
-                      setState(() {
+              SizedBox(height: 5),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: <Widget>[
+                  MaterialButton(
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(50)),
+                      color: darkAccentColor,
+                      child: Padding(
+                        padding: const EdgeInsets.fromLTRB(40, 10, 40, 10),
+                        child: Text("Vente",
+                            style:
+                                TextStyle(color: lightTextColor, fontSize: 18)),
+                      ),
+                      onPressed: () {
+                        setState(() {
+
+                        });
+                      }),
+                  MaterialButton(
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(50)),
+                      color: mainBackgroundColor,
+                      child: Padding(
+                        padding: const EdgeInsets.fromLTRB(40, 10, 40, 10),
+                        child: Text("Achat",
+                            style:
+                                TextStyle(color: lightTextColor, fontSize: 18)),
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          });
+                      })
+                ],
+              ),
+              SizedBox(height: 10),
+              Expanded(
+                  child: ListView.separated(
+                      separatorBuilder: (context, index) =>
+                          Divider(height: 3, color: Colors.transparent),
+                      itemCount: salesInfoList.length,
+                      padding: EdgeInsets.fromLTRB(8, 0, 8, 0),
+                      itemBuilder: (context, index) =>
+                          salesInfoCard(index, salesInfoList[index]))),
+            ],
+          ),
+        ),
+        Align(
+          alignment: Alignment.bottomCenter,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: <Widget>[
+              Expanded(
+                child: Container(
+                  decoration: BoxDecoration(
+                      color: darkAccentColor,
+                      borderRadius: BorderRadius.only(
+                          bottomRight: Radius.circular(10),
+                          topLeft: Radius.circular(10))),
+                  child: IconButton(
+                      icon: Icon(
+                        Icons.attach_money,
+                        color: Colors.white,
+                      ),
+                      onPressed: () {
                         salesActionDialog(context, true).then((onValue) {
                           if (onValue != null) sellingAction(onValue);
                         });
-                      });
-                    }),
-                MaterialButton(
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(50)),
-                    color: mainBackgroundColor,
-                    child: Padding(
-                      padding: const EdgeInsets.fromLTRB(40, 10, 40, 10),
-                      child: Text("Achat",
-                          style:
-                              TextStyle(color: lightTextColor, fontSize: 18)),
-                    ),
-                    onPressed: () {
-                      setState(() {
+                      }),
+                ),
+              ),
+              Expanded(
+                child: Container(
+                  decoration: BoxDecoration(
+                      color: mainBackgroundColor,
+                      borderRadius: BorderRadius.only(
+                          bottomRight: Radius.circular(10),
+                          topLeft: Radius.circular(10))),
+                  child: IconButton(
+                      icon: Icon(
+                        Icons.shopping_basket,
+                        color: Colors.white,
+                      ),
+                      onPressed: () {
                         salesActionDialog(context, false).then((onValue) {
                           if (onValue != null) buyingAction(onValue);
                         });
-                      });
-                    })
-              ],
-            ),
-            SizedBox(height: 10),
-            Expanded(
-                child: ListView.separated(
-                    separatorBuilder: (context, index) =>
-                        Divider(height: 3, color: Colors.transparent),
-                    itemCount: salesInfoList.length,
-                    padding: EdgeInsets.fromLTRB(8, 0, 8, 0),
-                    itemBuilder: (context, index) =>
-                        salesInfoCard(index, salesInfoList[index])))
-          ],
-        ),
-      ),
+                      }),
+                ),
+              ),
+            ],
+          ),
+        )
+      ]),
     );
   }
 
