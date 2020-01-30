@@ -201,35 +201,48 @@ class _DaySessionSceneState extends State<DaySessionScene> with RouteAware {
             children: <Widget>[
               Expanded(
                 child: Container(
+                  height: 48,
                   decoration: BoxDecoration(
                       color: darkAccentColor,
                       borderRadius:
                           BorderRadius.only(topLeft: Radius.circular(10))),
-                  child: IconButton(
-                      icon: Icon(Icons.attach_money, color: Colors.white),
-                      onPressed: () {
-                        salesActionDialog(context, true).then((onValue) {
-                          if (onValue != null) sellingAction(onValue);
-                        });
-                      }),
+                  child: InkWell(
+                    onTap: (){
+                      salesActionDialog(context, true).then((onValue) {
+                        if (onValue != null) sellingAction(onValue);
+                      });
+                    },
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: <Widget>[
+                        Text("Nouvelle vente", style: TextStyle(color: lightTransparentTextColor, fontWeight: FontWeight.bold, fontSize: 18),),
+                        Icon(Icons.attach_money, color: Colors.white),
+                      ],
+                    ),
+                  ),
                 ),
               ),
               Expanded(
                 child: Container(
+                  height: 48,
                   decoration: BoxDecoration(
                       color: mainBackgroundColor,
                       borderRadius:
                           BorderRadius.only(topRight: Radius.circular(10))),
-                  child: IconButton(
-                      icon: Icon(
-                        Icons.shopping_basket,
-                        color: Colors.white,
-                      ),
-                      onPressed: () {
-                        salesActionDialog(context, false).then((onValue) {
-                          if (onValue != null) buyingAction(onValue);
-                        });
-                      }),
+                  child: InkWell(
+                    onTap: (){
+                      salesActionDialog(context, true).then((onValue) {
+                        if (onValue != null) sellingAction(onValue);
+                      });
+                    },
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: <Widget>[
+                        Icon(Icons.shopping_cart, color: Colors.white),
+                        Text("Nouveau achat", style: TextStyle(color: lightTransparentTextColor, fontWeight: FontWeight.bold, fontSize: 18),),
+                      ],
+                    ),
+                  ),
                 ),
               ),
             ],
