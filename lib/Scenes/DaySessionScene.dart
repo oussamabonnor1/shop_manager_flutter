@@ -188,7 +188,7 @@ class _DaySessionSceneState extends State<DaySessionScene> with RouteAware {
                       : ListView.separated(separatorBuilder: (context, index) =>
                               Divider(height: 3, color: Colors.transparent),
                           itemCount: salesInfoList.length,
-                          padding: EdgeInsets.fromLTRB(8, 0, 8, 0),
+                          padding: EdgeInsets.fromLTRB(8, 0, 8, 48),
                           itemBuilder: (context, index) =>
                               salesInfoCard(index, salesInfoList[index]))),
             ],
@@ -231,8 +231,8 @@ class _DaySessionSceneState extends State<DaySessionScene> with RouteAware {
                           BorderRadius.only(topRight: Radius.circular(10))),
                   child: InkWell(
                     onTap: (){
-                      salesActionDialog(context, true).then((onValue) {
-                        if (onValue != null) sellingAction(onValue);
+                      salesActionDialog(context, false).then((onValue) {
+                        if (onValue != null) buyingAction(onValue);
                       });
                     },
                     child: Row(
