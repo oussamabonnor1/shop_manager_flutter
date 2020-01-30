@@ -73,13 +73,14 @@ class _HomePageState extends State<HomePage> with RouteAware {
   void initState() {
     super.initState();
 
+    totalAmount = 0;
     monthlyAmount = 0;
     selectedCategory = 0;
 
     dbManager = DatabaseManager();
     dbManager.initDatabase().then((onValue) {
       daySalesInfoDbManager = DaySalesInfoDbManager(dbManager.db);
-      fillInformation(1);
+      fillInformation(DateTime.now().month);
     });
 
   }
@@ -343,6 +344,8 @@ class _HomePageState extends State<HomePage> with RouteAware {
       daysSales.insert(0, DaySalesInfo(dailyProfit: 0));
     }
     daysSales.forEach((element) => monthlyAmount += element.dailyProfit);
+    setState(() {
+    });
   }
 
   createNewDailySession(BuildContext context) async {
