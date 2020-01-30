@@ -77,13 +77,14 @@ class _DaySessionSceneState extends State<DaySessionScene> with RouteAware {
   }
 
   void filterSalesList() async {
-    salesInfoList = await salesInfoDbManager.getAllSalesInfo(widget.daySalesInfo.month);
+    salesInfoList =
+        await salesInfoDbManager.getAllSalesInfo(widget.daySalesInfo.month);
     setState(() {
       if (salesInfoList == null) {
         salesInfoList = new List();
-      } else if(selectedFilter != 0) {
-        for(int i = 0; i < salesInfoList.length; i++){
-          if(salesInfoList.elementAt(i).type == (selectedFilter != 1))
+      } else if (selectedFilter != 0) {
+        for (int i = 0; i < salesInfoList.length; i++) {
+          if (salesInfoList.elementAt(i).type == (selectedFilter != 1))
             salesInfoList.removeAt(i);
         }
       }
@@ -166,7 +167,9 @@ class _DaySessionSceneState extends State<DaySessionScene> with RouteAware {
               SizedBox(height: 5),
               Container(
                 height: 50,
-                child: ListView.builder(
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 40),
+                  child: ListView.builder(
                     itemBuilder: (context, index) {
                       return index == selectedFilter
                           ? selectedFilterCard(filters.elementAt(index))
@@ -175,17 +178,19 @@ class _DaySessionSceneState extends State<DaySessionScene> with RouteAware {
                     },
                     itemCount: filters.length,
                     scrollDirection: Axis.horizontal,
+                  ),
                 ),
               ),
               SizedBox(height: 10),
               Expanded(
-                  child: ListView.separated(
-                      separatorBuilder: (context, index) =>
-                          Divider(height: 3, color: Colors.transparent),
-                      itemCount: salesInfoList.length,
-                      padding: EdgeInsets.fromLTRB(8, 0, 8, 0),
-                      itemBuilder: (context, index) =>
-                          salesInfoCard(index, salesInfoList[index]))),
+                  child: salesInfoList.isEmpty
+                      ? Column(children: <Widget>[SizedBox(height: 20,),Text("Liste vide",style: TextStyle(fontSize: 20,color: Colors.grey[600]))])
+                      : ListView.separated(separatorBuilder: (context, index) =>
+                              Divider(height: 3, color: Colors.transparent),
+                          itemCount: salesInfoList.length,
+                          padding: EdgeInsets.fromLTRB(8, 0, 8, 0),
+                          itemBuilder: (context, index) =>
+                              salesInfoCard(index, salesInfoList[index]))),
             ],
           ),
         ),
@@ -240,8 +245,8 @@ class _DaySessionSceneState extends State<DaySessionScene> with RouteAware {
         Navigator.push(
             context,
             CupertinoPageRoute(
-                builder: (context) =>
-                    SalesInfoDetails(info, salesInfoDbManager, widget.dbManager)));
+                builder: (context) => SalesInfoDetails(
+                    info, salesInfoDbManager, widget.dbManager)));
       },
       child: Card(
         color: lightTextColor,
