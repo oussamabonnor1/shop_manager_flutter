@@ -252,7 +252,7 @@ class _HomePageState extends State<HomePage> with RouteAware {
             children: <Widget>[
               CircleAvatar(
                   backgroundColor: mainBackgroundColor,
-                  child: Text(info.month.toString(),
+                  child: Text(info.day.toString(),
                       style: TextStyle(color: lightTextColor))),
               Expanded(
                 child: Padding(
@@ -338,7 +338,7 @@ class _HomePageState extends State<HomePage> with RouteAware {
     monthlyAmount = 0;
     daysSales = await daySalesInfoDbManager.getAllDailySalesInfo(month);
     if (daysSales == null) {
-      daysSales = [DaySalesInfo()];
+      daysSales = [DaySalesInfo(dailyProfit: 0)];
     } else {
       daysSales.insert(0, DaySalesInfo(dailyProfit: 0));
     }

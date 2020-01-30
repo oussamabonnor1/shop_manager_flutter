@@ -66,7 +66,7 @@ class DatabaseManager {
 
     int amount = await getRegisterInfo();
     if(amount < 0)
-      insertRegisterInfo();
+      await insertRegisterInfo();
   }
 
   Future<int> insertRegisterInfo() async {
