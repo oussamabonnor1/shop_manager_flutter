@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:shop_manager/Database/DatabaseManager.dart';
 import 'package:shop_manager/Database/RegisterTransactionDbManager.dart';
 import 'package:shop_manager/Models/RegisterTransaction.dart';
@@ -40,12 +41,6 @@ class _RegisterTransactionsSceneState extends State<RegisterTransactionsScene> {
       setState(() {
         transactions = [
           RegisterTransaction(
-              date: "02/01/2020",
-              message:
-                  "Payment fin du moisPayment fin du moisPayment fin du moisPayment fin du moisPayment fin du moisPayment fin du mois",
-              value: 25000,
-              type: true),
-          RegisterTransaction(
               date: "02/02/2020",
               message: "Payment fin du mois",
               value: 35000,
@@ -57,6 +52,8 @@ class _RegisterTransactionsSceneState extends State<RegisterTransactionsScene> {
               type: false),
         ];
       });
+    }else{
+      setState(() {});
     }
   }
 
@@ -66,7 +63,7 @@ class _RegisterTransactionsSceneState extends State<RegisterTransactionsScene> {
       appBar: AppBar(
         backgroundColor: darkAccentColor,
         elevation: 0,
-        title: Text("Register"),
+        title: Text("Gestion de caisse"),
         centerTitle: true,
         leading: IconButton(
             icon: Icon(Icons.arrow_back, color: Colors.white),
@@ -98,7 +95,12 @@ class _RegisterTransactionsSceneState extends State<RegisterTransactionsScene> {
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: <Widget>[
                       MaterialButton(
-                          onPressed: (){},
+                          onPressed: (){
+                            transactionActionDialog(context, true).then((onValue){
+                              if(onValue != null)
+                                transactionAction(onValue);
+                            });
+                          },
                         color: lightTextColor,
                           shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(20)),
@@ -108,7 +110,10 @@ class _RegisterTransactionsSceneState extends State<RegisterTransactionsScene> {
                                 style: TextStyle(color: mainBackgroundColor, fontSize: 18)),
                           )),
                       MaterialButton(
-                          onPressed: (){},
+                          onPressed: (){transactionActionDialog(context, false).then((onValue){
+                            if(onValue != null)
+                              transactionAction(onValue);
+                          });},
                         color: lightTextColor,
                           shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(20)),
@@ -206,4 +211,102 @@ class _RegisterTransactionsSceneState extends State<RegisterTransactionsScene> {
       ),
     );
   }
+
+
+  Future<RegisterTransaction> transactionActionDialog(BuildContext context, bool type) {
+    TextEditingController infoController = TextEditingController();
+    TextEditingController amountController = TextEditingController();
+
+    return showDialog(
+        context: context,
+        builder: (context) {
+          FocusNode focusNode = new FocusNode();
+          return Dialog(
+            shape:
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+            child: Padding(
+                padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
+                child: ListView(
+                  shrinkWrap: true,
+                  children: <Widget>[
+                    Image(
+                      image: AssetImage(
+                          type ? "images/buying.png" : "images/saving.png"),
+                      fit: BoxFit.fitWidth,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: TextField(
+                          textInputAction: TextInputAction.next,
+                          onSubmitted: (v) {
+                            FocusScope.of(context).requestFocus(focusNode);
+                          },
+                          controller: infoController,
+                          decoration:
+                          InputDecoration(hintText: "Message"),
+                          keyboardType: TextInputType.text),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: TextField(
+                        focusNode: focusNode,
+                        controller: amountController,
+                        decoration: InputDecoration(hintText: "Montant"),
+                        keyboardType: TextInputType.number,
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(0, 8, 0, 8),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: <Widget>[
+                          FlatButton(
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(20)),
+                            onPressed: () {
+                              setState(() {
+                                Navigator.of(context).pop(null);
+                              });
+                            },
+                            child: Text("Retour",
+                                style: TextStyle(color: Colors.white)),
+                            color: mainBackgroundColor,
+                          ),
+                          FlatButton(
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(20)),
+                            onPressed: () {
+                              setState(() {
+                                String date = DateFormat("dd/MM/yyyy").format(DateTime.now());
+
+                                RegisterTransaction transactionTemp = RegisterTransaction(
+                                    date: date,
+                                    message: infoController.text.toString(),
+                                    value: int.parse(
+                                        amountController.text.toString()),
+                                    type: type);
+                                widget.transactionsDbManager.insert(transactionTemp);
+                                Navigator.of(context).pop(transactionTemp);
+                              });
+                            },
+                            child: Text("Ajouter",
+                                style: TextStyle(color: Colors.white)),
+                            color: darkAccentColor,
+                          )
+                        ],
+                      ),
+                    )
+                  ],
+                )),
+          );
+        });
+  }
+
+  void transactionAction(RegisterTransaction transaction){
+    registerValue += transaction.type ? -transaction.value : transaction.value;
+    widget.dbManager.updateRegisterInfo(registerValue);
+    transactions.insert(0, transaction);
+  }
+
 }
+
