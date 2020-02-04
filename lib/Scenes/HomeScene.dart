@@ -98,7 +98,7 @@ class _HomePageState extends State<HomePage> with RouteAware {
         backgroundColor: darkAccentColor,
         actions: <Widget>[
           IconButton(icon: Icon(Icons.shopping_basket), onPressed: (){
-            Navigator.push(context, CupertinoPageRoute(builder: (context)=>RegisterTransactionsScene(dbManager: transactionDbManager)));
+            Navigator.push(context, CupertinoPageRoute(builder: (context)=>RegisterTransactionsScene(transactionsDbManager: transactionDbManager, dbManager: dbManager)));
           })
         ],
       ),

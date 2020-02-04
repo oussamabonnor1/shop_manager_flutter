@@ -94,7 +94,7 @@ class DatabaseManager {
     if (maps.length > 0) {
       return maps.first[registerValueColumn];
     }
-    return -1;
+    return 0;
   }
 
   Future<int> updateRegisterInfo(int amount) async {
