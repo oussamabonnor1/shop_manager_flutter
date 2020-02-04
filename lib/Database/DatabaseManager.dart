@@ -43,7 +43,7 @@ class DatabaseManager {
     String sqlQuery = "CREATE TABLE IF NOT EXISTS " +
         tableSalesInfoName +
         " ($idSalesInfoColumn INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL," +
-        " $dayIdSalesInfoColumn INTEGER," +
+        " $dayIdSalesInfoColumn TEXT," +
         "$informationColumn TEXT," +
         "$priceColumn INTEGER," +
         "$typeColumn BIT)";

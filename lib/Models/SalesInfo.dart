@@ -8,7 +8,7 @@ String typeColumn = "type";
 class SalesInfo{
 
   int id;
-  int dayId;
+  String dayId;
   String information;
   int amount;
   bool type;

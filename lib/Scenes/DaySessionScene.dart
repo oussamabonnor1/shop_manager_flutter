@@ -60,7 +60,7 @@ class _DaySessionSceneState extends State<DaySessionScene> with RouteAware {
     todayAmount = 0;
     totalAmount = await widget.dbManager.getRegisterInfo();
     salesInfoList =
-        await salesInfoDbManager.getAllSalesInfo(widget.daySalesInfo.month);
+        await salesInfoDbManager.getAllSalesInfo(getMonthDayDateFormat(widget.daySalesInfo.month, widget.daySalesInfo.day));
     setState(() {
       if (salesInfoList == null) {
         salesInfoList = new List();
@@ -78,7 +78,7 @@ class _DaySessionSceneState extends State<DaySessionScene> with RouteAware {
 
   void filterSalesList() async {
     salesInfoList =
-        await salesInfoDbManager.getAllSalesInfo(widget.daySalesInfo.month);
+        await salesInfoDbManager.getAllSalesInfo(getMonthDayDateFormat(widget.daySalesInfo.month, widget.daySalesInfo.day));
     setState(() {
       if (salesInfoList == null) {
         salesInfoList = new List();
@@ -184,8 +184,16 @@ class _DaySessionSceneState extends State<DaySessionScene> with RouteAware {
               SizedBox(height: 10),
               Expanded(
                   child: salesInfoList.isEmpty
-                      ? Column(children: <Widget>[SizedBox(height: 20,),Text("Liste vide",style: TextStyle(fontSize: 20,color: Colors.grey[600]))])
-                      : ListView.separated(separatorBuilder: (context, index) =>
+                      ? Column(children: <Widget>[
+                          SizedBox(
+                            height: 20,
+                          ),
+                          Text("Liste vide",
+                              style: TextStyle(
+                                  fontSize: 20, color: Colors.grey[600]))
+                        ])
+                      : ListView.separated(
+                          separatorBuilder: (context, index) =>
                               Divider(height: 3, color: Colors.transparent),
                           itemCount: salesInfoList.length,
                           padding: EdgeInsets.fromLTRB(8, 0, 8, 48),
@@ -207,7 +215,7 @@ class _DaySessionSceneState extends State<DaySessionScene> with RouteAware {
                       borderRadius:
                           BorderRadius.only(topLeft: Radius.circular(10))),
                   child: InkWell(
-                    onTap: (){
+                    onTap: () {
                       salesActionDialog(context, true).then((onValue) {
                         if (onValue != null) sellingAction(onValue);
                       });
@@ -215,7 +223,13 @@ class _DaySessionSceneState extends State<DaySessionScene> with RouteAware {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: <Widget>[
-                        Text("Nouvelle vente", style: TextStyle(color: lightTransparentTextColor, fontWeight: FontWeight.bold, fontSize: 18),),
+                        Text(
+                          "Nouvelle vente",
+                          style: TextStyle(
+                              color: lightTransparentTextColor,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 18),
+                        ),
                         Icon(Icons.attach_money, color: Colors.white),
                       ],
                     ),
@@ -230,7 +244,7 @@ class _DaySessionSceneState extends State<DaySessionScene> with RouteAware {
                       borderRadius:
                           BorderRadius.only(topRight: Radius.circular(10))),
                   child: InkWell(
-                    onTap: (){
+                    onTap: () {
                       salesActionDialog(context, false).then((onValue) {
                         if (onValue != null) buyingAction(onValue);
                       });
@@ -239,7 +253,13 @@ class _DaySessionSceneState extends State<DaySessionScene> with RouteAware {
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: <Widget>[
                         Icon(Icons.shopping_cart, color: Colors.white),
-                        Text("Nouveau achat", style: TextStyle(color: lightTransparentTextColor, fontWeight: FontWeight.bold, fontSize: 18),),
+                        Text(
+                          "Nouveau achat",
+                          style: TextStyle(
+                              color: lightTransparentTextColor,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 18),
+                        ),
                       ],
                     ),
                   ),
@@ -445,8 +465,11 @@ class _DaySessionSceneState extends State<DaySessionScene> with RouteAware {
                                 borderRadius: BorderRadius.circular(20)),
                             onPressed: () {
                               setState(() {
+                                String dayId = getMonthDayDateFormat(
+                                    widget.daySalesInfo.month,
+                                    widget.daySalesInfo.day);
                                 SalesInfo infoTemp = SalesInfo(
-                                    dayId: widget.daySalesInfo.month,
+                                    dayId: dayId,
                                     information: infoController.text.toString(),
                                     amount: int.parse(
                                         amountController.text.toString()),
@@ -466,5 +489,18 @@ class _DaySessionSceneState extends State<DaySessionScene> with RouteAware {
                 )),
           );
         });
+  }
+
+  String getMonthDayDateFormat(int month, int day) {
+    String dayId = "";
+    if (month < 10) {
+      dayId = "0";
+    }
+    dayId += month.toString();
+    if (day < 10) {
+      dayId += "0";
+    }
+    dayId += day.toString();
+    return dayId;
   }
 }

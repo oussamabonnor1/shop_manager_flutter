@@ -30,8 +30,8 @@ class SalesInfoDbManager {
     return null;
   }*/
 
-  Future<List<SalesInfo>> getAllSalesInfo(int id) async {
-    List<Map> maps = await db.query(tableName);
+  Future<List<SalesInfo>> getAllSalesInfo(String dayId) async {
+    List<Map> maps = await db.query(tableName, where: "$dayIdColumn = ?", whereArgs: [dayId]);
 
     if (maps.length > 0) {
       maps = maps.reversed.toList();
