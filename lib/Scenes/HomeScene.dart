@@ -3,8 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:shop_manager/Database/DatabaseManager.dart';
 import 'package:shop_manager/Database/DayInfoDbManager.dart';
+import 'package:shop_manager/Database/RegisterTransactionDbManager.dart';
 import 'package:shop_manager/Models/DaySalesInfo.dart';
 import 'package:shop_manager/Scenes/DaySessionScene.dart';
+import 'package:shop_manager/Scenes/RegisterTransactionsScene.dart';
 
 final RouteObserver<PageRoute> routeObserver = RouteObserver<PageRoute>();
 
@@ -54,6 +56,7 @@ class _HomePageState extends State<HomePage> with RouteAware {
 
   DatabaseManager dbManager;
   DaySalesInfoDbManager daySalesInfoDbManager;
+  RegisterTransactionDbManager transactionDbManager;
 
   int totalAmount, monthlyAmount, selectedCategory;
 
@@ -80,6 +83,7 @@ class _HomePageState extends State<HomePage> with RouteAware {
     dbManager = DatabaseManager();
     dbManager.initDatabase().then((onValue) {
       daySalesInfoDbManager = DaySalesInfoDbManager(dbManager.db);
+      transactionDbManager = RegisterTransactionDbManager(dbManager.db);
       fillInformation(DateTime.now().month);
     });
 
@@ -92,6 +96,11 @@ class _HomePageState extends State<HomePage> with RouteAware {
         title: Text("Home"),
         centerTitle: true,
         backgroundColor: darkAccentColor,
+        actions: <Widget>[
+          IconButton(icon: Icon(Icons.shopping_basket), onPressed: (){
+            Navigator.push(context, CupertinoPageRoute(builder: (context)=>RegisterTransactionsScene(dbManager: transactionDbManager)));
+          })
+        ],
       ),
         body: Stack(children: <Widget>[
           Padding(

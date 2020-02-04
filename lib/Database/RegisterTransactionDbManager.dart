@@ -18,7 +18,7 @@ class RegisterTransactionDbManager {
     return registerTransaction;
   }
 
-  Future<List<RegisterTransaction>> getAllSalesInfo() async {
+  Future<List<RegisterTransaction>> getTransactions() async {
     List<Map> maps = await db.query(tableName);
 
     if (maps.length > 0) {

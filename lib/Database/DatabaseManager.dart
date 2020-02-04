@@ -19,6 +19,12 @@ class DatabaseManager {
   String tableRegisterInfo = "registerInfo";
   String registerValueColumn = "registerValue";
 
+  String tableNameRegisterTransaction = "registerTransaction";
+  String messageColumnRegisterTransaction = "message";
+  String dateColumnRegisterTransaction = "date";
+  String valueColumnRegisterTransaction = "value";
+  String typeColumnRegisterTransaction = "type";
+
   Database db;
 
   Future<String> getDatabasePath(String dbName) async {
@@ -61,6 +67,15 @@ class DatabaseManager {
     sqlQuery = "CREATE TABLE IF NOT EXISTS " +
         tableRegisterInfo +
         " ($registerValueColumn INTEGER)";
+
+    await db.execute(sqlQuery);
+
+    sqlQuery = "CREATE TABLE IF NOT EXISTS " +
+        tableNameRegisterTransaction +
+        " ($messageColumnRegisterTransaction TEXT," +
+        " $dateColumnRegisterTransaction TEXT," +
+        "$valueColumnRegisterTransaction INTEGER," +
+        "$typeColumnRegisterTransaction BIT)";
 
     await db.execute(sqlQuery);
 
