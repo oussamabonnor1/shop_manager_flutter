@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:shop_manager/Database/DatabaseManager.dart';
 import 'package:shop_manager/Database/DayInfoDbManager.dart';
 import 'package:shop_manager/Database/RegisterTransactionDbManager.dart';
@@ -125,10 +126,7 @@ class _HomePageState extends State<HomePage> with RouteAware {
                                   padding: const EdgeInsets.all(8.0),
                                   child: Hero(
                                     tag: "logo",
-                                    child: Image.asset(
-                                      "images/inAppLogo.png",
-                                      height: 120,
-                                    ),
+                                    child: SvgPicture.asset("images/avatar.svg", height: 120)
                                   )
                                   //SvgPicture.asset("images/cookie.svg",height: 120,),
                                   ),
