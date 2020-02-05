@@ -70,6 +70,7 @@ class _DaySessionSceneState extends State<DaySessionScene> with RouteAware {
           int amount = element.type ? element.amount : 0;
           todayAmount += amount;
         });
+        print("today amount " + todayAmount.toString());
         widget.daySalesInfo.dailyProfit = todayAmount;
         daySalesInfoDbManager.update(widget.daySalesInfo);
       }
