@@ -1,4 +1,4 @@
-String idColumn = "month";
+String monthColumn = "month";
 String dayColumn = "day";
 String dailyProfitColumn = "dailyProfit";
 
@@ -10,7 +10,7 @@ class DaySalesInfo {
 
   Map<String, dynamic> toMap() {
     var map = <String, dynamic>{
-      idColumn: month,
+      monthColumn: month,
       dayColumn: day,
       dailyProfitColumn: dailyProfit,
     };
@@ -18,7 +18,7 @@ class DaySalesInfo {
   }
 
   DaySalesInfo.fromMap(Map<String, dynamic> map) {
-    month = map[idColumn];
+    month = map[monthColumn];
     day = map[dayColumn];
     dailyProfit = map[dailyProfitColumn];
   }

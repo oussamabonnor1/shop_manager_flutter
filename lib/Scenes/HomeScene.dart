@@ -362,6 +362,7 @@ class _HomePageState extends State<HomePage> with RouteAware {
     int month = DateTime.now().month;
     DaySalesInfo lastEntry = await daySalesInfoDbManager.getDayInfo(month, day);
     if (lastEntry == null) {
+      print("create new daily session: "+DaySalesInfo(month: month, day: day, dailyProfit: 0).toMap().toString());
       DaySalesInfo daySessionTemp = await daySalesInfoDbManager
           .insert(DaySalesInfo(month: month, day: day, dailyProfit: 0));
       Navigator.push(

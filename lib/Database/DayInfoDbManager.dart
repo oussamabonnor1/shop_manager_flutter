@@ -12,7 +12,7 @@ class DaySalesInfoDbManager {
 
   Future<DaySalesInfo> insert(DaySalesInfo salesInfo) async {
     print(salesInfo.toMap().values.toList());
-    salesInfo.month = await db.insert(tableName, salesInfo.toMap());
+    await db.insert(tableName, salesInfo.toMap());
     return salesInfo;
   }
 
