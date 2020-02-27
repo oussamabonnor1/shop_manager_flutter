@@ -1,16 +1,35 @@
-# shop_manager
+# Shop Manager Flutter
 
-A new Flutter application.
+![GitHub license](https://img.shields.io/github/license/oussamabonnor1/shop_manager_flutter.svg)
+![Jetlight studio](https://img.shields.io/badge/Made%20by-Jetlight%20studio-blue.svg?color=082544)
 
-## Getting Started
+A small app to manager simple transactions made in a shop (selling, buying, register handling..etc).
 
-This project is a starting point for a Flutter application.
+## Screenshot:
+<img src="Screenshots/days_list.jpg" width ="250"/> <img src="Screenshots/transaction_list.jpg" width ="250"/>                           
+<img src="Screenshots/transaction_details.jpg" width ="250"/> <img src="Screenshots/register_list.jpg" width ="250"/>
 
-A few resources to get you started if this is your first Flutter project:
+## Features:
+* Details are included in days elements which are included in months tabs for a good UX.
+* The app keeps track of register content and monthly gain in a seperate way.
+* inside each day, selling and buying actions are seperated for better detailings.
+* Each transaction is detailed in it's own screen for better UX.
+* The register handling is seperated from the rest of the app's workflow for a better UI presentation.
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
+## TODO:
+* [ ] Hook the app with an API for remote saving.
+* [ ] Adding accounts for different users.
+* [ ] Adding E-Payement and delivery options.
+* [ ] Adding rating, charts and detailed statistics.
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Tools used:
+* Android studio (IDE)
+* Dart (logic)
+* Flutter (Mobile UI developement kit).
+* Paint.Net (Image editting)
+
+## Contribution:
+Feel free to `fork` this project and add whatever you like. If you have any suggestions or any comments please feel free to contact me or to open an issue, use free license art assets please.
+
+## Team:
+[Jetlighters](https://github.com/JetLightStudio) having fun.
