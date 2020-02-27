@@ -6,8 +6,8 @@
 A small app to manager simple transactions made in a shop (selling, buying, register handling..etc).
 
 ## Screenshot:
-<img src="Screenshots/days_list.jpg" width ="250"/> <img src="Screenshots/transaction_list.jpg" width ="250"/>                           
-<img src="Screenshots/transaction_details.jpg" width ="250"/> <img src="Screenshots/register_list.jpg" width ="250"/>
+<img src="Screenshots/days_list.jpg" width ="250"/> <img src="Screenshots/transaction_list.jpg" width ="250"/> <img src="Screenshots/selling_popup.jpg" width ="250"/>                           
+<img src="Screenshots/transaction_details.jpg" width ="250"/> <img src="Screenshots/register_list.jpg" width ="250"/> <img src="Screenshots/buying_popup.jpg" width ="250"/>
 
 ## Features:
 * Details are included in days elements which are included in months tabs for a good UX.
