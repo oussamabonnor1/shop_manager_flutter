@@ -15,6 +15,7 @@ A small app to manager simple transactions made in a shop (selling, buying, regi
 * inside each day, selling and buying actions are seperated for better detailings.
 * Each transaction is detailed in it's own screen for better UX.
 * The register handling is seperated from the rest of the app's workflow for a better UI presentation.
+* Everything is saved in a local Sqlite database.
 
 ## TODO:
 * [ ] Hook the app with an API for remote saving.
