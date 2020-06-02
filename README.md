@@ -29,6 +29,20 @@ A small app to manager simple transactions made in a shop (selling, buying, regi
 * Flutter (Mobile UI developement kit).
 * Paint.Net (Image editting)
 
+Flutter is Google's SDK for crafting beautiful, fast user experiences for
+mobile, web and desktop from a single codebase. Flutter works with existing
+code, is used by developers and organizations around the world, and is free
+and open source.
+
+## Documentation
+
+* [Install Flutter](https://flutter.dev/get-started/)
+* [Flutter documentation](https://flutter.dev/docs)
+
+For announcements about new releases and breaking changes, follow the
+[flutter-announce@googlegroups.com](https://groups.google.com/forum/#!forum/flutter-announce)
+mailing list.
+
 ## Contribution:
 Feel free to `fork` this project and add whatever you like. If you have any suggestions or any comments please feel free to contact me or to open an issue, use free license art assets please.
 
